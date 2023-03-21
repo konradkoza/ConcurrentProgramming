@@ -7,6 +7,9 @@ namespace TestProject1
         public void TestMethod1()
         {
             ClassLibrary1.Kalkulator calc = new ClassLibrary1.Kalkulator();
+            int x = 5;
+            int y = 6;
+            Assert.AreEqual(calc.Dodaj(x, y), 11);
         }
     }
 }
