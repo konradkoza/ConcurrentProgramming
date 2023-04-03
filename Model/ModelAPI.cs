@@ -1,7 +1,10 @@
-﻿namespace Model
+﻿using System.ComponentModel;
+
+namespace Model
 {
     public class ModelAPI
     {
 
     }
+
 }

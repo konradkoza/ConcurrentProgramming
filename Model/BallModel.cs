@@ -25,8 +25,7 @@ namespace Model
 
         public double Y
         {
-            get { return ball.y; }
-        }
+            get { return ball.y; } }
 
     }
 }

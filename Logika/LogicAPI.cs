@@ -28,5 +28,11 @@
         {
             return playingField.getBalls(); 
         }
+
+
+        public void Dispose()
+        {
+            timer.Dispose();
+        }
     }
 }

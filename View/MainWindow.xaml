@@ -5,11 +5,42 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:ViewModel;assembly=ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="900" Width="1000">
+        Title="MainWindow" Height="700" Width="1000">
     <Window.DataContext>
         <vm:ViewModelAPI/>
     </Window.DataContext>
-    <Grid>
+    <StackPanel>
+        <Grid ShowGridLines="True" Height="700" Width="1000" Background="#FFEAE8E8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="137*" ></RowDefinition>
+                <RowDefinition Height="38*" ></RowDefinition>
+            </Grid.RowDefinitions>
 
-    </Grid>
+            <Button Name="StartButton" Content="Start" Height="30" Width="100" Margin="450,74,450,26" Grid.Row="1" Background="#FFBBBBBB" />
+            <TextBox Text="{Binding InputNumber}" TextAlignment="Center" Height="30" Width="100" Margin="450,36,450,64" RenderTransformOrigin="0.495,0.858" Grid.Row="1"/>
+            <TextBlock Text="Podaj ilość kul" Height="30" Grid.Row="1" Margin="440,17,440,105" TextAlignment="Center" FontSize="16"/>
+            <Grid Width="500" Height="500" Grid.Row="0" Background="#FFEAE8E8">
+                <Border  BorderBrush="Black" Background="#FFDACFBB" BorderThickness="2">
+                    <ItemsControl ItemsSource="{Binding balls}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Ellipse Width= "{Binding Diameter}" Height="{Binding Diameter}" Fill="red" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemContainerStyle>
+                            <Style TargetType="ContentPresenter">
+                                <Setter Property="Canvas.Top" Value="{Binding X}" />
+                                <Setter Property="Canvas.Left" Value="{Binding Y}" />
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+                    </ItemsControl>
+                </Border>
+            </Grid>
+        </Grid>
+    </StackPanel>
 </Window>
