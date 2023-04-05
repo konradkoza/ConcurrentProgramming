@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Dane
 {
-    internal class DataApi
+    public class DataApi
     {
         public DataApi() { }
     }

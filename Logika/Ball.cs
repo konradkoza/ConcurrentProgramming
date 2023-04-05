@@ -8,7 +8,7 @@ namespace Logika
     {
         public double x { get; set; }
         public double y { get; set; }
-        private double diameter { get; set; } = 20;
+        public double diameter { get; set; } = 20;
         private double xSpeed { get; set; }
         private double ySpeed { get; set; }
 

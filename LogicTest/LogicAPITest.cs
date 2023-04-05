@@ -1,4 +1,5 @@
 using Logika;
+using System.Diagnostics;
 
 namespace LogicTest
 {
@@ -8,17 +9,19 @@ namespace LogicTest
         [TestMethod]
         public void TestMethod1()
         {
-            Ball ball1 = new Ball(20, 20);
-            Ball ball2 = new Ball(30, 40);
+            
             LogicAPI logicAPI = new LogicAPI();
 
-            logicAPI.addBall(ball1);
-            logicAPI.addBall(ball2);
+            logicAPI.addBall();
+            logicAPI.addBall();
+            double x1 = logicAPI.getBalls().ElementAt<Ball>(0).x;
+            double y1 = logicAPI.getBalls().ElementAt<Ball>(0).y;
+
             Thread.Sleep(200);
-            Assert.AreNotEqual(ball1.x, 20);
-            Assert.AreNotEqual(ball1.y, 20);
-            Assert.AreNotEqual(ball1.x, 30);
-            Assert.AreNotEqual(ball1.y, 40);
+
+            Assert.AreNotEqual(x1, logicAPI.getBalls().ElementAt<Ball>(0).x);
+            Assert.AreNotEqual(y1, logicAPI.getBalls().ElementAt<Ball>(0).y);
+
 
         }
     }

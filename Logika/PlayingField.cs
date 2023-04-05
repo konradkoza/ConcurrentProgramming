@@ -8,8 +8,8 @@ namespace Logika
 {
     internal class PlayingField
     {
-        private List<Ball> balls = new List<Ball>();
-        public int size { get; } = 200;
+        public List<Ball> balls { get; } = new List<Ball>();
+        public int size { get; } = 500;
 
         public int interval { get; } = 20;
 
@@ -27,11 +27,6 @@ namespace Logika
         public void addBall(Ball b)
         {
             this.balls.Add(b);
-        }
-
-        public List<Ball> getBalls()
-        {
-            return balls;
         }
 
         public void moveBalls()
