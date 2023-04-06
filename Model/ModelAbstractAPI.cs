@@ -18,7 +18,7 @@ namespace Model
         }
     }
 
-    public class ModelAPI : ModelAbstractAPI
+    internal class ModelAPI : ModelAbstractAPI
     {
         private LogicAbstractAPI logicAPI;
 

@@ -5,7 +5,7 @@ namespace Logika
 {
     public abstract class LogicAbstractAPI
     {
-        public abstract void addBall();
+        public abstract void addBall(Ball b);
 
         public abstract List<Ball> getBalls();
 
@@ -15,36 +15,43 @@ namespace Logika
         }
     }
     internal class LogicAPI : LogicAbstractAPI
-
     {
-        private DataApi dataAPI;
+        private DataAbstractAPI dataAPI;
         public LogicAPI()
         {
-            dataAPI = new DataApi();
-            timer = new Timer(moveBalls, null, TimeSpan.Zero , TimeSpan.FromMilliseconds(playingField.interval));
+            dataAPI = DataAbstractAPI.CreateAPI();
+            
         }
 
-        private void moveBalls(object? state)
+        public void MoveBalls(int size)
         {
-            playingField.moveBalls();
+            foreach (var ball in dataAPI.GetBalls())
+            {
+                ball.x += ball.xSpeed;
+                ball.y += ball.ySpeed;
+                
+                if (ball.X < 0 || ball.X + ball.Diameter > size)
+                {
+                    ball.xSpeed *= -1;
+                }
+                if (ball.Y < 0 || ball.Y + ball.Diameter > size)
+                {
+                    ball.ySpeed *= -1;
+                }
+            }
         }
 
-        private Timer timer;
 
-        Random random = new Random();
-
-        private PlayingField playingField = new PlayingField();
-
-        public override void addBall()
+        public override void addBall(Ball b)
         {
-            playingField.addBall(new Ball(random.NextDouble() * (playingField.size - 20) + 10, random.NextDouble() * (playingField.size - 20) + 10));
+           dataAPI.AddBall(b);
         }
 
         public override List<Ball> getBalls()
         {
-            return playingField.balls; 
+            return dataAPI.GetBalls(); 
         }
 
-
+  
     }
 }

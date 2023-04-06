@@ -5,9 +5,9 @@ using System.Runtime.CompilerServices;
 
 namespace Model
 {
-    public class BallModel : INotifyPropertyChanged
+    public class BallModel
     {
-        private Ball ball;
+        public Ball ball { get; }
 
 
         public BallModel(Ball ball)
@@ -15,46 +15,5 @@ namespace Model
             this.ball = ball;
         }
 
-
-        public double X
-        {
-            get { return ball.x; }
-
-            set
-            {
-                ball.x = value;
-                OnPropertyChanged("X");
-            }
-        }
-
-        public double Y
-        {
-            get { return ball.y; }
-            set
-            {
-                ball.y = value;
-                OnPropertyChanged("Y");
-            }
-        }
-
-        public double Diameter
-        {
-            get
-            {
-                return ball.diameter;
-            }
-            set
-            {
-                ball.diameter = value;
-                OnPropertyChanged("Diameter");
-            }
-        }
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
     }
 }
