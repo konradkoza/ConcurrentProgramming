@@ -13,9 +13,9 @@ namespace ViewModel
 
         public ICommand OnClickStartButton { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-        public ObservableCollection<BallModel> ballList { get; set; }
+        public ObservableCollection<BallModel> ballList { get; set; } = new ObservableCollection<BallModel>();
 
         private ModelAbstractAPI modelAPI;
 
@@ -30,15 +30,13 @@ namespace ViewModel
             
             modelAPI.addBalls(getInputValue());
             modelAPI.addModelBalls();
-            ObservableCollection<BallModel> balls = new ObservableCollection<BallModel>();
             foreach (BallModel ball in modelAPI.BallModels)
             {
-                balls.Add(ball);
+                ballList.Add(ball);
                 
             }
-            ballList = balls;
             OnPropertyChanged(nameof(ballList));
-              
+            modelAPI.Start(); 
         }
 
         public string InputNumber

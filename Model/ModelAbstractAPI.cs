@@ -12,18 +12,23 @@ namespace Model
 
         public abstract void addBalls(int number);
 
+        public abstract void Start();
+
         public static ModelAbstractAPI CreateApi()
         {
             return new ModelAPI();
         }
     }
 
-    internal class ModelAPI : ModelAbstractAPI
+    internal class ModelAPI : ModelAbstractAPI, IDisposable
     {
         private LogicAbstractAPI logicAPI;
 
+        private Timer timer;
+
         public ModelAPI()
         {
+            
             logicAPI = LogicAbstractAPI.createAPI();
         }
 
@@ -32,11 +37,26 @@ namespace Model
         public override void addModelBalls()
         {
           
-            foreach (Ball ball in logicAPI.getBalls())
+            foreach (var ball in logicAPI.getBalls())
             {
-                BallModels.Add(new BallModel(ball));
+                BallModels.Add(new BallModel(ball.x, ball.y, ball.diameter));
             }
        
+        }
+
+        public override void Start()
+        {
+          timer = new Timer(move, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(10));
+        }
+
+        private void move(object? state)
+        {
+            logicAPI.MoveBalls();
+            for(int i = 0; i < BallModels.Count; i++)
+            {
+                BallModels[i].X = logicAPI.getBalls()[i].X;
+                BallModels[i].Y = logicAPI.getBalls()[i].Y;
+            }
         }
 
         public override void addBalls(int number)
@@ -48,6 +68,10 @@ namespace Model
             }
         }
 
+        public void Dispose()
+        {
+            timer.Dispose();
+        }
 
     }
 }

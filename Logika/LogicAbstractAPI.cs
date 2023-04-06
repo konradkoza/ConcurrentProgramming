@@ -5,9 +5,12 @@ namespace Logika
 {
     public abstract class LogicAbstractAPI
     {
-        public abstract void addBall(Ball b);
+        public abstract void addBall();
 
         public abstract List<Ball> getBalls();
+
+        public abstract void MoveBalls();
+
 
         public static LogicAbstractAPI createAPI()
         {
@@ -16,6 +19,10 @@ namespace Logika
     }
     internal class LogicAPI : LogicAbstractAPI
     {
+        public int size { get; set; } = 500;
+
+        private Random random = new Random();
+
         private DataAbstractAPI dataAPI;
         public LogicAPI()
         {
@@ -23,7 +30,7 @@ namespace Logika
             
         }
 
-        public void MoveBalls(int size)
+        public override void MoveBalls()
         {
             foreach (var ball in dataAPI.GetBalls())
             {
@@ -42,9 +49,9 @@ namespace Logika
         }
 
 
-        public override void addBall(Ball b)
+        public override void addBall()
         {
-           dataAPI.AddBall(b);
+           dataAPI.AddBall(new Ball(random.NextDouble() * (size - 20) + 10, random.NextDouble() * (size - 20) + 10, random.NextDouble() * 2 + 1, random.NextDouble() * 2 + 1 );
         }
 
         public override List<Ball> getBalls()

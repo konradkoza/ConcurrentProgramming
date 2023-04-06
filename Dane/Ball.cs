@@ -45,12 +45,12 @@ namespace Dane
          }
 
 
-         public Ball(double x, double y)
+         public Ball(double x, double y, double xS, double yS)
          {
              this.x = x;
              this.y = y;
-             this.xSpeed = 0.2;
-             this.ySpeed = 0.3;
+             this.xSpeed = xS;
+             this.ySpeed = yS;
          }
 
     }

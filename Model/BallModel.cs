@@ -5,15 +5,48 @@ using System.Runtime.CompilerServices;
 
 namespace Model
 {
-    public class BallModel
+    public class BallModel : INotifyPropertyChanged
     {
-        public Ball ball { get; }
+        private double x;
+        private double y;
+        public double Diameter { get; }
 
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-        public BallModel(Ball ball)
+        public double X
         {
-            this.ball = ball;
+            get { return x; }
+            set { x = value;
+                OnPropertyChanged("X");
+            }
         }
 
+        public double Y
+        {
+            get { return y; }
+            set { y = value;
+                OnPropertyChanged("Y");
+            }
+        }
+
+
+        public BallModel(double x, double y, double diameter)
+        {
+            this.x = x;
+            this.y = y;
+            this.Diameter = diameter;
+        }
+
+        public void Move(double x, double y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }
