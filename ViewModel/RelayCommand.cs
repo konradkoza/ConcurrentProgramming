@@ -7,14 +7,14 @@ using System.Windows.Input;
 
 namespace ViewModel
 {
-    internal class CustomCommand : ICommand
+    internal class RelayCommand : ICommand
     {
         private Action action;
 
 
         public event EventHandler? CanExecuteChanged;
 
-        public CustomCommand(Action action)
+        public RelayCommand(Action action)
         {
             this.action = action;
         }

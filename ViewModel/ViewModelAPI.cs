@@ -3,11 +3,12 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-
 namespace ViewModel
 {
     public class ViewModelAPI : INotifyPropertyChanged
     {
+
+        public bool IsEnabled { get; set; } = true;
 
         public string inputNumber = "10";
 
@@ -21,22 +22,28 @@ namespace ViewModel
 
         public ViewModelAPI()
         {
-            OnClickStartButton = new CustomCommand(() => StartButtonHandle());
+            OnClickStartButton = new RelayCommand(() => StartButtonHandle());
             modelAPI = ModelAbstractAPI.CreateApi();
         }
 
         public void StartButtonHandle()
         {
-            
-            modelAPI.addBalls(getInputValue());
-            modelAPI.addModelBalls();
-            foreach (BallModel ball in modelAPI.BallModels)
+            int value = getInputValue();
+            if (value > 0)
             {
-                ballList.Add(ball);
-                
+                IsEnabled = false;
+                OnPropertyChanged(nameof(IsEnabled));
+                modelAPI.addBalls(value);
+                modelAPI.addModelBalls();
+                foreach (BallModel ball in modelAPI.BallModels)
+                {
+                    ballList.Add(ball);
+
+                }
+                OnPropertyChanged(nameof(ballList));
+                modelAPI.Start();
             }
-            OnPropertyChanged(nameof(ballList));
-            modelAPI.Start(); 
+
         }
 
         public string InputNumber

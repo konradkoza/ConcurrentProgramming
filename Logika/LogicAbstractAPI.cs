@@ -51,7 +51,7 @@ namespace Logika
 
         public override void addBall()
         {
-           dataAPI.AddBall(new Ball(random.NextDouble() * (size - 20) + 10, random.NextDouble() * (size - 20) + 10, random.NextDouble() * 2 + 1, random.NextDouble() * 2 + 1 );
+            dataAPI.AddBall(new Ball(random.NextDouble() * (size - 30) + 10, random.NextDouble() * (size - 30) + 10, random.NextDouble() * 2 + 1, random.NextDouble() * 2 + 1 ));
         }
 
         public override List<Ball> getBalls()
