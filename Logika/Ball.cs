@@ -1,8 +1,4 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Xml.Linq;
-
-namespace Logika
+﻿namespace Logika
 {
     public class Ball
     {
@@ -13,7 +9,7 @@ namespace Logika
         private double ySpeed { get; set; }
 
         public Ball(double x, double y)
-        {   
+        {
             this.x = x;
             this.y = y;
             this.xSpeed = 0.2;
@@ -26,12 +22,25 @@ namespace Logika
             double xNew = this.x + xSpeed;
             double yNew = this.y + ySpeed;
 
-            if(xNew > (size - diameter / 2)) {
-                this.xSpeed = -this.xSpeed;
-            }
-            if(yNew > (size - diameter / 2))
+            if (xNew > (size - diameter / 2))
             {
-                this.ySpeed= -this.ySpeed;
+                this.xSpeed = -this.xSpeed;
+                xNew -= 2 * xSpeed;
+            }
+            else if (xNew < (0 + diameter / 2))
+            {
+                this.xSpeed = -this.xSpeed;
+                xNew += 2 * xSpeed;
+            }
+            else if (yNew > (size - diameter / 2))
+            {
+                this.ySpeed = -this.ySpeed;
+                yNew -= 2 * ySpeed;
+            }
+            else if (yNew < (0 + diameter / 2))
+            {
+                this.ySpeed = -this.ySpeed;
+                yNew += 2 * ySpeed;
             }
 
             x = xNew;
@@ -39,6 +48,6 @@ namespace Logika
 
         }
 
-      
+
     }
 }
