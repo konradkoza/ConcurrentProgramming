@@ -1,5 +1,4 @@
-﻿using Logika;
-using Model;
+﻿using Model;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
