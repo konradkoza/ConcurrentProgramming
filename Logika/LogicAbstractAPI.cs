@@ -3,7 +3,18 @@ using Dane;
 
 namespace Logika
 {
-    public class LogicAPI
+    public abstract class LogicAbstractAPI
+    {
+        public abstract void addBall();
+
+        public abstract List<Ball> getBalls();
+
+        public static LogicAPI createAPI()
+        {
+            return new LogicAPI();
+        }
+    }
+    internal class LogicAPI : LogicAbstractAPI
 
     {
         private DataApi dataAPI;
@@ -24,12 +35,12 @@ namespace Logika
 
         private PlayingField playingField = new PlayingField();
 
-        public void addBall()
+        public override void addBall()
         {
             playingField.addBall(new Ball(random.NextDouble() * (playingField.size - 20) + 10, random.NextDouble() * (playingField.size - 20) + 10));
         }
 
-        public List<Ball> getBalls()
+        public override List<Ball> getBalls()
         {
             return playingField.balls; 
         }

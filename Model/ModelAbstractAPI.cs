@@ -20,11 +20,11 @@ namespace Model
 
     public class ModelAPI : ModelAbstractAPI
     {
-        private LogicAPI logicAPI;
+        private LogicAbstractAPI logicAPI;
 
         public ModelAPI()
         {
-            logicAPI = new LogicAPI();
+            logicAPI = LogicAbstractAPI.createAPI();
         }
 
         public override List<BallModel> BallModels { get; } = new List<BallModel>();
