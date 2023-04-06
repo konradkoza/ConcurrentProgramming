@@ -9,7 +9,7 @@ namespace Logika
 
         public abstract List<Ball> getBalls();
 
-        public static LogicAPI createAPI()
+        public static LogicAbstractAPI createAPI()
         {
             return new LogicAPI();
         }
