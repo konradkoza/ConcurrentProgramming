@@ -1,4 +1,5 @@
 using Logika;
+using Moq;
 using System.Diagnostics;
 
 namespace LogicTest
@@ -6,13 +7,15 @@ namespace LogicTest
     [TestClass]
     public class LogicAPITest
     {
+
         [TestMethod]
-        public void TestMethod1()
+        public void getBalls_shouldReturnList()
         {
-            
-            
+            // Arrange
+            mockLogicApi = Mock.Create<LogicAbstractAPI>();
+            // Act
 
-
+            // Assert
         }
     }
 }
