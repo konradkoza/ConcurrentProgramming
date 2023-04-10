@@ -1,5 +1,4 @@
 ﻿
-using Dane; 
 
 namespace Logika
 {
@@ -19,20 +18,21 @@ namespace Logika
     }
     internal class LogicAPI : LogicAbstractAPI
     {
+        private List<Ball> balls;
+
         public int size { get; set; } = 500;
 
         private Random random = new Random();
 
-        private DataAbstractAPI dataAPI;
         public LogicAPI()
         {
-            dataAPI = DataAbstractAPI.CreateAPI();
-            
+            balls = new List<Ball>();
+
         }
 
         public override void MoveBalls()
         {
-            foreach (var ball in dataAPI.GetBalls())
+            foreach (var ball in balls)
             {
                 ball.x += ball.xSpeed;
                 ball.y += ball.ySpeed;
@@ -51,12 +51,12 @@ namespace Logika
 
         public override void addBall()
         {
-            dataAPI.AddBall(new Ball(random.NextDouble() * (size - 30) + 10, random.NextDouble() * (size - 30) + 10, random.NextDouble() * 2 + 1, random.NextDouble() * 2 + 1 ));
+            balls.Add(new Ball(random.NextDouble() * (size - 30) + 10, random.NextDouble() * (size - 30) + 10, random.NextDouble() * 2 + 1, random.NextDouble() * 2 + 1 ));
         }
 
         public override List<Ball> getBalls()
         {
-            return dataAPI.GetBalls(); 
+            return balls;
         }
 
   
