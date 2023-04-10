@@ -1,5 +1,4 @@
 using Logika;
-using Moq;
 using System.Diagnostics;
 
 namespace LogicTest
