@@ -1,5 +1,7 @@
 ﻿
 
+using Data;
+
 namespace Logika
 {
     public abstract class LogicAbstractAPI
@@ -24,10 +26,12 @@ namespace Logika
 
         private Random random = new Random();
 
+        private DataAbstractAPI dataAPI;
+
         public LogicAPI()
         {
             balls = new List<Ball>();
-
+            dataAPI = DataAbstractAPI.CreateAPI();
         }
 
         public override void MoveBalls()
