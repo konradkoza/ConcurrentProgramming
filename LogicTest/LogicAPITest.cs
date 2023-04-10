@@ -12,7 +12,8 @@ namespace LogicTest
         public void getBalls_shouldReturnList()
         {
             // Arrange
-            mockLogicApi = Mock.Create<LogicAbstractAPI>();
+            Mock<LogicAbstractAPI> mockLogicAbstractAPI = new Mock<LogicAbstractAPI>();
+            mockLogicAbstractAPI.Setup(p => p.addBall()).Returns(List<Ball>);
             // Act
 
             // Assert
