@@ -38,16 +38,16 @@ namespace Logika
         {
             foreach (var ball in balls)
             {
-                ball.x += ball.xSpeed;
-                ball.y += ball.ySpeed;
+                ball.X += ball.XSpeed;
+                ball.Y += ball.YSpeed;
                 
                 if (ball.X < 0 || ball.X + ball.Diameter > size)
                 {
-                    ball.xSpeed *= -1;
+                    ball.XSpeed *= -1;
                 }
                 if (ball.Y < 0 || ball.Y + ball.Diameter > size)
                 {
-                    ball.ySpeed *= -1;
+                    ball.YSpeed *= -1;
                 }
             }
         }

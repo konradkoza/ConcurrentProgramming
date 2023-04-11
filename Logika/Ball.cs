@@ -6,11 +6,11 @@ namespace Logika
     {
         
      
-         public double x { get; set; }
-         public double y { get; set; }
-         public double diameter { get; set; } = 20;
-         public double xSpeed { get; set; }
-         public double ySpeed { get; set; }
+         private double x { get; set; }
+         private double y { get; set; }
+         private double diameter { get; set; } = 20;
+         private double xSpeed { get; set; }
+         private double ySpeed { get; set; }
 
 
          public double X
@@ -44,13 +44,25 @@ namespace Logika
              }
          }
 
+        public double XSpeed
+        {
+            get;
+            set;
+        }
+
+        public double YSpeed
+        {
+            get;
+            set;
+        }
+
 
          public Ball(double x, double y, double xS, double yS)
          {
              this.x = x;
              this.y = y;
-             this.xSpeed = xS;
-             this.ySpeed = yS;
+             this.XSpeed = xS;
+             this.YSpeed = yS;
          }
 
     }

@@ -39,7 +39,7 @@ namespace Model
           
             foreach (var ball in logicAPI.getBalls())
             {
-                BallModels.Add(new BallModel(ball.x, ball.y, ball.diameter));
+                BallModels.Add(new BallModel(ball.X, ball.Y, ball.Diameter));
             }
        
         }
