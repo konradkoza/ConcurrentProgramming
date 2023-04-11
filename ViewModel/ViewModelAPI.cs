@@ -33,8 +33,8 @@ namespace ViewModel
             {
                 IsEnabled = false;
                 OnPropertyChanged(nameof(IsEnabled));
-                modelAPI.addBalls(value);
-                modelAPI.addModelBalls();
+                modelAPI.AddBalls(value);
+                modelAPI.AddModelBalls();
                 foreach (BallModel ball in modelAPI.BallModels)
                 {
                     ballList.Add(ball);

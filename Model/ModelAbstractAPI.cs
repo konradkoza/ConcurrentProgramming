@@ -8,9 +8,9 @@ namespace Model
     {
         public abstract List<BallModel> BallModels { get; }
 
-        public abstract void addModelBalls();
+        public abstract void AddModelBalls();
 
-        public abstract void addBalls(int number);
+        public abstract void AddBalls(int number);
 
         public abstract void Start();
 
@@ -29,15 +29,15 @@ namespace Model
         public ModelAPI()
         {
             
-            logicAPI = LogicAbstractAPI.createAPI();
+            logicAPI = LogicAbstractAPI.CreateAPI();
         }
 
         public override List<BallModel> BallModels { get; } = new List<BallModel>();
 
-        public override void addModelBalls()
+        public override void AddModelBalls()
         {
           
-            foreach (var ball in logicAPI.getBalls())
+            foreach (var ball in logicAPI.GetBalls())
             {
                 BallModels.Add(new BallModel(ball.X, ball.Y, ball.Diameter));
             }
@@ -46,24 +46,24 @@ namespace Model
 
         public override void Start()
         {
-          timer = new Timer(move, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(10));
+          timer = new Timer(Move, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(10));
         }
 
-        private void move(object? state)
+        private void Move(object? state)
         {
             logicAPI.MoveBalls();
             for(int i = 0; i < BallModels.Count; i++)
             {
-                BallModels[i].X = logicAPI.getBalls()[i].X;
-                BallModels[i].Y = logicAPI.getBalls()[i].Y;
+                BallModels[i].X = logicAPI.GetBalls()[i].X;
+                BallModels[i].Y = logicAPI.GetBalls()[i].Y;
             }
         }
 
-        public override void addBalls(int number)
+        public override void AddBalls(int number)
         {
             for(int i = 0; i < number; i++)
             {
-                logicAPI.addBall();
+                logicAPI.AddBall();
                 
             }
         }

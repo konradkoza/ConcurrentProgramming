@@ -6,14 +6,14 @@ namespace Logika
 {
     public abstract class LogicAbstractAPI
     {
-        public abstract void addBall();
+        public abstract void AddBall();
 
-        public abstract List<Ball> getBalls();
+        public abstract List<Ball> GetBalls();
 
         public abstract void MoveBalls();
 
 
-        public static LogicAbstractAPI createAPI()
+        public static LogicAbstractAPI CreateAPI()
         {
             return new LogicAPI();
         }
@@ -53,12 +53,12 @@ namespace Logika
         }
 
 
-        public override void addBall()
+        public override void AddBall()
         {
             balls.Add(new Ball(random.NextDouble() * (size - 30) + 10, random.NextDouble() * (size - 30) + 10, random.NextDouble() * 2 + 1, random.NextDouble() * 2 + 1 ));
         }
 
-        public override List<Ball> getBalls()
+        public override List<Ball> GetBalls()
         {
             return balls;
         }
