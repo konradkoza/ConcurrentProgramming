@@ -12,17 +12,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementy rozwiązania", "El
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Prezentacja", "Prezentacja", "{C2AE85FC-4C2D-487F-A5E9-D5D1168DDC24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic", "Logika\Logic.csproj", "{88226531-BD1B-4498-ACFA-B18BAB9A72AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logic", "Logika\Logic.csproj", "{88226531-BD1B-4498-ACFA-B18BAB9A72AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{46848182-F240-48D8-8DC9-CA6280ED3EB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model", "Model\Model.csproj", "{46848182-F240-48D8-8DC9-CA6280ED3EB0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewModel", "ViewModel\ViewModel.csproj", "{5F679218-D5B1-49C2-AA16-0197C7DFD974}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewModel", "ViewModel\ViewModel.csproj", "{5F679218-D5B1-49C2-AA16-0197C7DFD974}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataTest", "DataTest\DataTest.csproj", "{CA3F7EE6-2E0F-4B85-8D9C-B201ADCAE86D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataTest", "DataTest\DataTest.csproj", "{CA3F7EE6-2E0F-4B85-8D9C-B201ADCAE86D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogicTest", "LogicTest\LogicTest.csproj", "{1F0C952E-F389-451E-A519-E30961308FD0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicTest", "LogicTest\LogicTest.csproj", "{1F0C952E-F389-451E-A519-E30961308FD0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "View", "View\View.csproj", "{287A3C01-5BCA-48E4-BB66-36A4B4FBCE99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "View", "View\View.csproj", "{287A3C01-5BCA-48E4-BB66-36A4B4FBCE99}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A8F7F59B-D5FC-4AA2-AD26-648487F3F624}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

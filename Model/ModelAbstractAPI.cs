@@ -14,6 +14,8 @@ namespace Model
 
         public abstract void Start();
 
+        public abstract void Stop();
+
         public static ModelAbstractAPI CreateApi()
         {
             return new ModelAPI();
@@ -66,6 +68,14 @@ namespace Model
                 logicAPI.AddBall();
                 
             }
+        }
+
+        public override void Stop()
+        {
+            this.Dispose();
+            BallModels.Clear();
+            logicAPI.RemoveAllBalls();
+                       
         }
 
         public void Dispose()

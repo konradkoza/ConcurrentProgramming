@@ -9,7 +9,7 @@ namespace Model
     {
         private double x;
         private double y;
-        public double Diameter { get; }
+        private double diameter;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -29,12 +29,17 @@ namespace Model
             }
         }
 
+        public double Diameter
+        {
+            get { return diameter; }
+        }
+
 
         public BallModel(double x, double y, double diameter)
         {
             this.x = x;
             this.y = y;
-            this.Diameter = diameter;
+            this.diameter = diameter;
         }
 
         public void Move(double x, double y)

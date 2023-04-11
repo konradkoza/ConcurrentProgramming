@@ -12,7 +12,7 @@ namespace Logika
 
         public abstract void MoveBalls();
 
-
+        public abstract void RemoveAllBalls();
         public static LogicAbstractAPI CreateAPI()
         {
             return new LogicAPI();
@@ -63,6 +63,10 @@ namespace Logika
             return balls;
         }
 
-  
+        public override void RemoveAllBalls()
+        {
+            balls.Clear();
+        }
+
     }
 }

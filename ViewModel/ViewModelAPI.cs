@@ -8,11 +8,15 @@ namespace ViewModel
     public class ViewModelAPI : INotifyPropertyChanged
     {
 
-        public bool IsEnabled { get; set; } = true;
+        public bool isStartEnabled { get; set; } = true;
+
+        public bool isStopEnabled { get; set; } = false;
 
         public string inputNumber = "10";
 
         public ICommand OnClickStartButton { get; set; }
+
+        public ICommand OnClickStopButton { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -20,10 +24,40 @@ namespace ViewModel
 
         private ModelAbstractAPI modelAPI;
 
+        public bool IsStartEnabled
+        {
+            get { return isStartEnabled; }
+            set
+            {
+                isStartEnabled = value;
+                OnPropertyChanged(nameof(isStartEnabled));
+            }
+        }
+
+        public bool IsStopEnabled
+        {
+            get { return isStopEnabled; }
+            set
+            {
+                isStopEnabled = value;
+                OnPropertyChanged(nameof(isStopEnabled));
+            }
+        }
+
         public ViewModelAPI()
         {
             OnClickStartButton = new RelayCommand(() => StartButtonHandle());
+            OnClickStopButton = new RelayCommand(() => StopButtonHandle());
             modelAPI = ModelAbstractAPI.CreateApi();
+        }
+
+        public void StopButtonHandle()
+        {
+            modelAPI.Stop();
+            ballList.Clear();
+            this.IsStartEnabled = true;
+            this.IsStopEnabled = false;
+
         }
 
         public void StartButtonHandle()
@@ -31,8 +65,8 @@ namespace ViewModel
             int value = getInputValue();
             if (value > 0)
             {
-                IsEnabled = false;
-                OnPropertyChanged(nameof(IsEnabled));
+                this.IsStartEnabled = false;
+                this.IsStopEnabled = true;
                 modelAPI.AddBalls(value);
                 modelAPI.AddModelBalls();
                 foreach (BallModel ball in modelAPI.BallModels)
