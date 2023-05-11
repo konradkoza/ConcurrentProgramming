@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Data
 {
-    internal class BallChangedEventArgs : EventArgs
+    public class BallChangedEventArgs : EventArgs
     {
         public BallChangedEventArgs(IBall ball)
         {

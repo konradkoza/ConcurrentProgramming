@@ -10,12 +10,17 @@ namespace Data
 {
     internal class Ball : IBall
     {
+        private Task task;
 
-        public Ball(float x, float y, int mass, Vector2 velocity ) {
+        private bool move = true;
+
+
+        public Ball(float x, float y, int mass, Vector2 velocity)
+        {
             _position = new Vector2(x, y);
             _velocity = velocity;
             Mass = mass;
-        
+            task = Task.Run(Move);
         }
 
         public event EventHandler<BallChangedEventArgs>? BallChanged;
@@ -41,6 +46,23 @@ namespace Data
 
         public int Id { get; }
 
-        
+        private async void Move()
+        {
+            while (move)
+            {
+                _position += _velocity;
+
+                BallChanged?.Invoke(this, new BallChangedEventArgs(this));
+
+                await Task.Delay((int)Vector2.Divide(_velocity, 10).Length());
+            }
+
+        }
+
+        public void StopMovement()
+        {
+            move = false;
+        }
+
     }
 }
