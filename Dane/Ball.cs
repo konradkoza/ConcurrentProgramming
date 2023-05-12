@@ -35,7 +35,11 @@ namespace Data
         public Vector2 Velocity
         {
             get => _velocity;
-            set => _velocity = value;
+            set {
+                
+                _velocity = value; 
+                
+            }
         }
 
         public float X => _position.X;
