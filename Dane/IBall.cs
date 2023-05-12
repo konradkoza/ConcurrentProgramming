@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Data
 {
-    public interface IBall
+    public interface IBall : IDisposable
     {
         int  Id { get; }
 

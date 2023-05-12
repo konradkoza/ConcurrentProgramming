@@ -15,8 +15,9 @@ namespace Data
         private bool move = true;
 
 
-        public Ball(float x, float y, int mass, Vector2 velocity)
+        public Ball(float x, float y, int mass, Vector2 velocity, int id)
         {
+            Id = id;
             _position = new Vector2(x, y);
             _velocity = velocity;
             Mass = mass;
@@ -64,5 +65,9 @@ namespace Data
             move = false;
         }
 
+        public void Dispose()
+        {
+            task.Dispose();
+        }
     }
 }
