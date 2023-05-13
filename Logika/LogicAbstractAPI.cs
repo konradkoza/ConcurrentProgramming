@@ -6,21 +6,24 @@ namespace Logika
 {
     public abstract class LogicAbstractAPI
     {
-        public abstract void AddBall();
+        public abstract int Width { get; set; }
+        public abstract int Height { get; set; }
 
-        public abstract List<Ball> GetBalls();
+        public abstract void AddBalls(int count);
 
-        public abstract void MoveBalls();
-
+        public abstract IEnumerable<IBall> GetBalls();
+        
         public abstract void RemoveAllBalls();
-        public static LogicAbstractAPI CreateAPI()
+        public static LogicAbstractAPI CreateAPI(int width, int height)
         {
-            return new LogicAPI();
+            return new LogicAPI(width, height);
         }
     }
     internal class LogicAPI : LogicAbstractAPI
     {
-        private List<Ball> balls;
+        private readonly object _collisionLock = new();
+        public override int Width { get; set; }
+        public override int Height { get; set; }
 
         public int size { get; set; } = 500;
 
@@ -28,44 +31,44 @@ namespace Logika
 
         private DataAbstractAPI dataAPI;
 
-        public LogicAPI()
+        public LogicAPI(int width, int height)
         {
-            balls = new List<Ball>();
-            dataAPI = DataAbstractAPI.CreateAPI();
+            dataAPI = DataAbstractAPI.CreateAPI(width, height);
+            Width = width;
+            Height = height;
         }
 
-        public override void MoveBalls()
+
+
+        public override void AddBalls(int count)
         {
-            foreach (var ball in balls)
+            dataAPI.CreateBalls(count);
+            for(int i = 0; i < count; i++)
             {
-                ball.X += ball.XSpeed;
-                ball.Y += ball.YSpeed;
-                
-                if (ball.X < 0 || ball.X + ball.Diameter > size)
-                {
-                    ball.XSpeed *= -1;
-                }
-                if (ball.Y < 0 || ball.Y + ball.Diameter > size)
-                {
-                    ball.YSpeed *= -1;
-                }
+                dataAPI.GetBall(i).BallChanged += DetectBallCollision;
+                dataAPI.GetBall(i).BallChanged += DetectWallCollision;
             }
+
         }
 
-
-        public override void AddBall()
+        public override IEnumerable<IBall> GetBalls()
         {
-            balls.Add(new Ball(random.NextDouble() * (size - 30) + 10, random.NextDouble() * (size - 30) + 10, random.NextDouble() * 2 + 1, random.NextDouble() * 2 + 1 ));
-        }
-
-        public override List<Ball> GetBalls()
-        {
-            return balls;
+            return dataAPI.GetBallsList();
         }
 
         public override void RemoveAllBalls()
         {
-            balls.Clear();
+            dataAPI.RemoveBalls();
+        }
+
+        private void DetectBallCollision(object? sender, EventArgs args)
+        {
+            lock (_collisionLock) { }
+        }
+
+        private void DetectWallCollision(object? sender, EventArgs args)
+        {
+
         }
 
     }
