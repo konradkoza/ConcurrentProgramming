@@ -14,7 +14,10 @@ namespace Data
         public abstract IBall GetBall(int index);
         public abstract void CreateBalls(int  count);
         public abstract void RemoveBalls();
-        public abstract IEnumerable<IBall> GetBallsList();
+
+        public abstract ObservableCollection<IBall> GetBalls();
+
+
         public abstract int Width { get; }
         public abstract int Height { get; }
         public abstract int Diameter { get; }
@@ -31,14 +34,16 @@ namespace Data
             {
                 Width = width;
                 Height = height;
-                _balls = new List<IBall>();
+                _balls = new ObservableCollection<IBall>();
             }
-
+            private ObservableCollection<IBall> _balls;
             public override int Width { get; }
             public override int Height { get; }
             public override int Diameter { get; } = 40; 
-            private readonly List<IBall> _balls;
+
             private readonly Random _random = new Random();
+
+            public override ObservableCollection<IBall> GetBalls() => _balls;
 
             public override int GetBallCount() 
             { 
@@ -54,19 +59,20 @@ namespace Data
             {
                 for(int i  = 0; i < count; i++)
                 {
-                    var velX = _random.Next(-5, 5);
-                    var velY = _random.Next(-5, 5);
+                    float velX = _random.Next(-2, 2);
+                    float velY = _random.Next(-2, 2);
                     while (velX == 0 & velY == 0)
                     {
-                        velX = _random.Next(-5, 5);
-                        velY = _random.Next(-5, 5);
+                        velX = _random.Next(-2, 2);
+                        velY = _random.Next(-2, 2);
                     }
 
-                    var vel = new Vector2(velX, velY);
-                    var ballX = _random.Next(20, Width - Diameter - 20);
-                    var ballY = _random.Next(20, Height - Diameter - 20);
-                    var ballMass = _random.Next(90, 250);
-                    var ball = new Ball(ballX, ballY, ballMass, vel, i);
+                    Vector2 vel = new Vector2(velX, velY);
+              
+                    float ballX = (float)(_random.Next(20 + Diameter, Width - Diameter - 20) + _random.NextDouble());
+                    float ballY = (float)(_random.Next(20 + Diameter, Height - Diameter - 20) + _random.NextDouble());
+                    int ballMass = _random.Next(90, 250);
+                    Ball ball = new Ball(ballX, ballY, ballMass, vel, Diameter, i);
                     _balls.Add(ball);
                 }
             }
@@ -80,10 +86,7 @@ namespace Data
                 _balls.Clear(); 
             }
 
-            public override IEnumerable<IBall> GetBallsList()
-            {
-                return new ReadOnlyCollection<IBall>(_balls);
-            }
+           
 
         }
     }

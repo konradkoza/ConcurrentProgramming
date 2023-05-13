@@ -1,6 +1,7 @@
 ﻿
 
 using Data;
+using System.Collections.ObjectModel;
 using System.Numerics;
 
 namespace Logika
@@ -10,11 +11,10 @@ namespace Logika
         public abstract int Width { get; set; }
         public abstract int Height { get; set; }
 
-        public const int Diameter = 20;
 
         public abstract void AddBalls(int count);
 
-        public abstract IEnumerable<IBall> GetBalls();
+        public abstract ObservableCollection<IBall> GetBalls();
 
         public abstract void RemoveAllBalls();
         public static LogicAbstractAPI CreateAPI(int width, int height)
@@ -27,8 +27,6 @@ namespace Logika
             private readonly object _collisionLock = new();
             public override int Width { get; set; }
             public override int Height { get; set; }
-
-            public int size { get; set; } = 500;
 
             private Random random = new Random();
 
@@ -54,9 +52,9 @@ namespace Logika
 
             }
 
-            public override IEnumerable<IBall> GetBalls()
+            public override ObservableCollection<IBall> GetBalls()
             {
-                return dataAPI.GetBallsList();
+                return dataAPI.GetBalls();
             }
 
             public override void RemoveAllBalls()
@@ -111,7 +109,7 @@ namespace Logika
                     return false;
                 }
                 float distance = Vector2.Distance(firstBall.Position, secondBall.Position);
-                return distance <= (Diameter + Diameter) / 2;
+                return distance <= (firstBall.Diameter + secondBall.Diameter) / 2;
             }
 
             private void DetectWallCollision(object? sender, EventArgs args)
@@ -122,7 +120,7 @@ namespace Logika
                 }
                 IBall ball = (IBall)sender;
                 Vector2 newVel = new Vector2(ball.Velocity.X, ball.Velocity.Y);
-                int Radius = Diameter / 2;
+                int Radius = ball.Diameter / 2;
                 if (ball.Position.X - Radius <= 0)
                 {
                     newVel.X = -ball.Velocity.X;

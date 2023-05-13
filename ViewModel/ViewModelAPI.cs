@@ -1,4 +1,5 @@
-﻿using Model;
+﻿using Data;
+using Model;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -7,7 +8,8 @@ namespace ViewModel
 {
     public class ViewModelAPI : INotifyPropertyChanged
     {
-
+        public int Width = 500;
+        public int Height = 500;
         public bool isStartEnabled { get; set; } = true;
 
         public bool isStopEnabled { get; set; } = false;
@@ -20,7 +22,7 @@ namespace ViewModel
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public ObservableCollection<BallModel> ballList { get; set; } = new ObservableCollection<BallModel>();
+        public ObservableCollection<IBall> ballList { get; set; }
 
         private ModelAbstractAPI modelAPI;
 
@@ -30,7 +32,7 @@ namespace ViewModel
             set
             {
                 isStartEnabled = value;
-                OnPropertyChanged(nameof(isStartEnabled));
+                OnPropertyChanged();
             }
         }
 
@@ -40,7 +42,7 @@ namespace ViewModel
             set
             {
                 isStopEnabled = value;
-                OnPropertyChanged(nameof(isStopEnabled));
+                OnPropertyChanged();
             }
         }
 
@@ -48,7 +50,7 @@ namespace ViewModel
         {
             OnClickStartButton = new RelayCommand(() => StartButtonHandle());
             OnClickStopButton = new RelayCommand(() => StopButtonHandle());
-            modelAPI = ModelAbstractAPI.CreateApi();
+            modelAPI = ModelAbstractAPI.CreateApi(Width, Height);
         }
 
         public void StopButtonHandle()
@@ -68,14 +70,8 @@ namespace ViewModel
                 this.IsStartEnabled = false;
                 this.IsStopEnabled = true;
                 modelAPI.AddBalls(value);
-                modelAPI.AddModelBalls();
-                foreach (BallModel ball in modelAPI.BallModels)
-                {
-                    ballList.Add(ball);
-
-                }
-                OnPropertyChanged(nameof(ballList));
-                modelAPI.Start();
+                Balls = modelAPI.getBalls();
+                //modelAPI.Start();
             }
 
         }
@@ -86,8 +82,16 @@ namespace ViewModel
             set
             {
                 inputNumber = value;
-                OnPropertyChanged(nameof(InputNumber));
+                OnPropertyChanged();
             }
+        }
+
+        public ObservableCollection<IBall> Balls {
+            get { return ballList; } 
+
+            set { ballList = value;
+                OnPropertyChanged();
+                }
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)

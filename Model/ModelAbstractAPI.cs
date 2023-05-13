@@ -1,14 +1,17 @@
-﻿using Logika;
+﻿using Data;
+using Logika;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace Model
 {
     public abstract class ModelAbstractAPI
     {
-        public abstract List<BallModel> BallModels { get; }
+        public abstract int width { get; }
+        public abstract int height { get; }
 
-        public abstract void AddModelBalls();
+        public abstract ObservableCollection<IBall> getBalls(); // zmienic !!!
 
         public abstract void AddBalls(int number);
 
@@ -16,72 +19,54 @@ namespace Model
 
         public abstract void Stop();
 
-        public static ModelAbstractAPI CreateApi()
+        public static ModelAbstractAPI CreateApi(int w, int h)
         {
-            return new ModelAPI();
+            return new ModelAPI(w, h);
         }
     }
 
     internal class ModelAPI : ModelAbstractAPI, IDisposable
     {
+
+        public override int width { get; }
+        public override int height { get; }
         private LogicAbstractAPI logicAPI;
 
-        private Timer timer;
 
-        public ModelAPI()
+        public ModelAPI(int w, int h)
         {
-            
-            logicAPI = LogicAbstractAPI.CreateAPI();
+            width = w;
+            height = h;
+            logicAPI = LogicAbstractAPI.CreateAPI(width, height);
         }
 
-        public override List<BallModel> BallModels { get; } = new List<BallModel>();
 
-        public override void AddModelBalls()
-        {
-          
-            foreach (var ball in logicAPI.GetBalls())
-            {
-                BallModels.Add(new BallModel(ball.X, ball.Y, ball.Diameter));
-            }
-       
-        }
+
 
         public override void Start()
         {
-          timer = new Timer(Move, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(10));
+          
         }
 
-        private void Move(object? state)
-        {
-            logicAPI.MoveBalls();
-            for(int i = 0; i < BallModels.Count; i++)
-            {
-                BallModels[i].X = logicAPI.GetBalls()[i].X;
-                BallModels[i].Y = logicAPI.GetBalls()[i].Y;
-            }
-        }
+
 
         public override void AddBalls(int number)
         {
-            for(int i = 0; i < number; i++)
-            {
-                logicAPI.AddBall();
-                
-            }
+            logicAPI.AddBalls(number);
         }
 
         public override void Stop()
         {
-            this.Dispose();
-            BallModels.Clear();
+            
             logicAPI.RemoveAllBalls();
                        
         }
 
         public void Dispose()
         {
-            timer.Dispose();
+            
         }
 
+        public override ObservableCollection<IBall> getBalls() => logicAPI.GetBalls();
     }
 }
