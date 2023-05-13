@@ -99,7 +99,6 @@ namespace ViewModel
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-
         public int getInputValue()
         {
             if (Int32.TryParse(InputNumber, out int value) && InputNumber != "0")
