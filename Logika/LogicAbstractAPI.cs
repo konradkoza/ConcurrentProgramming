@@ -35,7 +35,7 @@ namespace Logika
             public override int Width { get; set; }
             public override int Height { get; set; }
             public override event EventHandler<(int Id, float X, float Y, int Diameter)>? LogicLayerEvent;
-
+            private ConcurrentDictionary<(int, int), bool> _collisionFlags = new ConcurrentDictionary<(int, int), bool>();
             private DataAbstractAPI dataAPI;
         
             public LogicAPI(int width, int height)
@@ -115,17 +115,23 @@ namespace Logika
                         {
                             continue;
                         }
-                        
-                        if ( IsCollision(firstBall, secondBall))
-                        { 
 
-                     
+                        if (!HasCollisionBeenChecked(secondBall, firstBall) && IsCollision(firstBall, secondBall))
+                        {
+                            MarkCollisionAsChecked(firstBall, secondBall);
+
+
                             Vector2 newFirstBallVel = NewVelocity(firstBall, secondBall);
                             Vector2 newSecondBallVel = NewVelocity(secondBall, firstBall);
 
                             firstBall.Velocity = newFirstBallVel;
                             secondBall.Velocity = newSecondBallVel;
 
+                            
+
+                        } else
+                        {
+                            RemoveCollisionFromChecked(secondBall, firstBall);
                         }
 
                     }
@@ -133,7 +139,31 @@ namespace Logika
                 }
             }
 
-            
+            private void MarkCollisionAsChecked(IBall firstBall, IBall secondBall)
+            {
+                int id1 = firstBall.Id;
+                int id2 = secondBall.Id;
+                var key = (id1, id2);
+                _collisionFlags.TryAdd(key, true);
+            }
+
+            private void RemoveCollisionFromChecked(IBall firstBall, IBall secondBall)
+            {
+                int id1 = firstBall.Id;
+                int id2 = secondBall.Id;
+                var key = (id1, id2);
+                _collisionFlags.Remove(key, out _);
+            }
+
+            private bool HasCollisionBeenChecked(IBall firstBall, IBall secondBall)
+            {
+                int id1 = firstBall.Id;
+                int id2 = secondBall.Id;
+                var key = (id1, id2);
+                return _collisionFlags.ContainsKey(key);
+            }
+
+
 
             private Vector2 NewVelocity(IBall firstBall, IBall secondBall)
             {

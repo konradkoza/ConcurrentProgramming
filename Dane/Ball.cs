@@ -77,16 +77,11 @@ namespace Data
                     Position += _velocity;
               
                     BallChanged?.Invoke(this, new BallChangedEventArgs(this));
-                    float delay = 10 / _velocity.Length();
+                    float delay = 40 / _velocity.Length();
                     Debug.WriteLine(delay);
                     await Task.Delay((int)delay);
                 }
 
-            }
-
-            public void StopMovement()
-            {
-                _move = false;
             }
 
             public void Dispose()
