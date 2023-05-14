@@ -23,15 +23,22 @@
             <Grid Width="500" Height="500" Grid.Row="0" Background="#FFEAE8E8">
                 <Border  BorderBrush="Black" Background="#FFDACFBB" BorderThickness="0.5">
                     <ItemsControl ItemsSource="{Binding Balls}" Height="500" Margin="0,0,0,0" Width="500">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Canvas>
-                                    <Ellipse Width= "{Binding Diameter}" Height="{Binding Diameter}" Canvas.Left="{Binding X}" Canvas.Top="{Binding Y}" Fill="Blue" Stroke="Black" />
-                                </Canvas> 
+                                <Ellipse Width= "{Binding Diameter}" Height="{Binding Diameter}" Fill="Blue" Stroke="Black" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
-                        
-                     
+                        <ItemsControl.ItemContainerStyle>
+                            <Style TargetType="ContentPresenter">
+                                <Setter Property="Canvas.Top" Value="{Binding X}" />
+                                <Setter Property="Canvas.Left" Value="{Binding Y}" />
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
                     </ItemsControl>
                 </Border>
             </Grid>

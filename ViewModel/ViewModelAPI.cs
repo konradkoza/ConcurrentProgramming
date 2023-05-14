@@ -14,7 +14,7 @@ namespace ViewModel
 
         public bool isStopEnabled { get; set; } = false;
 
-        public string inputNumber = "10";
+        public string inputNumber = "3";
 
         public ICommand OnClickStartButton { get; set; }
 
@@ -22,7 +22,7 @@ namespace ViewModel
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public ObservableCollection<IBall> ballList { get; set; }
+        public ObservableCollection<BallModel> Balls { get; }
 
         private ModelAbstractAPI modelAPI;
 
@@ -51,12 +51,13 @@ namespace ViewModel
             OnClickStartButton = new RelayCommand(() => StartButtonHandle());
             OnClickStopButton = new RelayCommand(() => StopButtonHandle());
             modelAPI = ModelAbstractAPI.CreateApi(Width, Height);
+            Balls = modelAPI.Balls;
         }
 
         public void StopButtonHandle()
         {
             modelAPI.Stop();
-            ballList.Clear();
+            Balls.Clear();
             this.IsStartEnabled = true;
             this.IsStopEnabled = false;
 
@@ -70,8 +71,6 @@ namespace ViewModel
                 this.IsStartEnabled = false;
                 this.IsStopEnabled = true;
                 modelAPI.AddBalls(value);
-                Balls = modelAPI.getBalls();
-                //modelAPI.Start();
             }
 
         }
@@ -84,14 +83,6 @@ namespace ViewModel
                 inputNumber = value;
                 OnPropertyChanged();
             }
-        }
-
-        public ObservableCollection<IBall> Balls {
-            get { return ballList; } 
-
-            set { ballList = value;
-                OnPropertyChanged();
-                }
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)

@@ -91,6 +91,7 @@ namespace Data
         public void Dispose()
         {
             task.Dispose();
+            _move = false;  
         }
     }
 }

@@ -11,11 +11,15 @@ namespace Logika
         public abstract int Width { get; set; }
         public abstract int Height { get; set; }
 
+        public abstract event EventHandler<BallChangedEventArgs> LogicLayerEvent;
 
         public abstract void AddBalls(int count);
 
         public abstract ObservableCollection<IBall> GetBalls();
+        public abstract int GetBallsCount();
 
+
+        public abstract IBall GetBall(int id);
         public abstract void RemoveAllBalls();
         public static LogicAbstractAPI CreateAPI(int width, int height)
         {
@@ -27,8 +31,7 @@ namespace Logika
             private readonly object _collisionLock = new();
             public override int Width { get; set; }
             public override int Height { get; set; }
-
-            private Random random = new Random();
+            public override event EventHandler<BallChangedEventArgs> LogicLayerEvent;
 
             private DataAbstractAPI dataAPI;
 
@@ -46,8 +49,8 @@ namespace Logika
                 dataAPI.CreateBalls(count);
                 for (int i = 0; i < count; i++)
                 {
-                    dataAPI.GetBall(i).BallChanged += DetectBallCollision;
-                    dataAPI.GetBall(i).BallChanged += DetectWallCollision;
+                    dataAPI.GetBall(i).BallChanged += PositionChanged;
+                    
                 }
 
             }
@@ -57,18 +60,32 @@ namespace Logika
                 return dataAPI.GetBalls();
             }
 
+            public override IBall GetBall(int id)
+            {
+                return dataAPI.GetBall(id);
+            }
+
             public override void RemoveAllBalls()
             {
                 dataAPI.RemoveBalls();
             }
 
-            private void DetectBallCollision(object? sender, EventArgs args)
+            private void PositionChanged(object? sender, EventArgs e) 
             {
                 if (sender == null)
                 {
                     return;
                 }
-                IBall firstBall = (IBall)sender;
+                IBall ball = (IBall)sender;
+                DetectBallCollision(ball);
+                DetectWallCollision(ball);
+                LogicLayerEvent?.Invoke(this, new BallChangedEventArgs(ball));
+            }
+
+
+            private void DetectBallCollision(IBall firstBall)
+            {
+               
 
                 lock (_collisionLock)
                 {
@@ -112,13 +129,9 @@ namespace Logika
                 return distance <= (firstBall.Diameter + secondBall.Diameter) / 2;
             }
 
-            private void DetectWallCollision(object? sender, EventArgs args)
+            private void DetectWallCollision(IBall ball)
             {
-                if (sender == null)
-                {
-                    return;
-                }
-                IBall ball = (IBall)sender;
+               
                 Vector2 newVel = new Vector2(ball.Velocity.X, ball.Velocity.Y);
                 int Radius = ball.Diameter / 2;
                 if (ball.Position.X - Radius <= 0)
@@ -142,6 +155,11 @@ namespace Logika
                 }
 
                 ball.Velocity = newVel;
+            }
+
+            public override int GetBallsCount()
+            {
+                return dataAPI.GetBallCount();
             }
 
         }
