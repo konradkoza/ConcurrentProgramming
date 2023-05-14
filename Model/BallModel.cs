@@ -7,24 +7,26 @@ namespace Model
 {
     public class BallModel : INotifyPropertyChanged
     {
-        private float x;
-        private float y;
+        private float _left;
+        private float _top;
         private int diameter;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public float X
+        public float Left
         {
-            get { return x; }
-            set { x = value;
+            get { return _left; }
+            set {
+                _left = value;
                 OnPropertyChanged();
             }
         }
 
-        public float Y
+        public float Top
         {
-            get { return y; }
-            set { y = value;
+            get { return _top; }
+            set {
+                _top = value;
                 OnPropertyChanged();
             }
         }
@@ -37,15 +39,16 @@ namespace Model
 
         public BallModel(float x, float y, int diameter)
         {
-            this.x = x;
-            this.y = y;
+            Top = y - diameter / 2;
+            Left = x - diameter / 2;
+
             this.diameter = diameter;
         }
 
         public void Move(float x, float y)
         {
-            this.X = x;
-            this.Y = y;
+            this.Left = x;
+            this.Top = y;
         }
 
 

@@ -20,7 +20,6 @@ namespace Data
 
         public abstract int Width { get; }
         public abstract int Height { get; }
-        public abstract int Diameter { get; }
         
 
         public static DataAbstractAPI CreateAPI(int width, int height)
@@ -39,7 +38,7 @@ namespace Data
             private ObservableCollection<IBall> _balls;
             public override int Width { get; }
             public override int Height { get; }
-            public override int Diameter { get; } = 40; 
+ 
 
             private readonly Random _random = new Random();
 
@@ -68,11 +67,12 @@ namespace Data
                     }
 
                     Vector2 vel = new Vector2(velX, velY);
-              
-                    float ballX = (float)(_random.Next(20 + Diameter, Width - Diameter - 20) + _random.NextDouble());
-                    float ballY = (float)(_random.Next(20 + Diameter, Height - Diameter - 20) + _random.NextDouble());
-                    int ballMass = _random.Next(90, 250);
-                    Ball ball = new Ball(ballX, ballY, ballMass, vel, Diameter, i);
+                    int diameter = _random.Next(10, 40);
+                    int ballMass = diameter * 2;
+                    float ballX = (float)(_random.Next(20 + diameter, Width - diameter - 20) + _random.NextDouble());
+                    float ballY = (float)(_random.Next(20 + diameter, Height - diameter - 20) + _random.NextDouble());
+                    
+                    Ball ball = new Ball(ballX, ballY, ballMass, vel, diameter, i);
                     _balls.Add(ball);
                 }
             }

@@ -1,6 +1,8 @@
 ﻿
 
 using Data;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Numerics;
 
@@ -34,7 +36,7 @@ namespace Logika
             public override event EventHandler<BallChangedEventArgs> LogicLayerEvent;
 
             private DataAbstractAPI dataAPI;
-
+        
             public LogicAPI(int width, int height)
             {
                 dataAPI = DataAbstractAPI.CreateAPI(width, height);
@@ -50,7 +52,7 @@ namespace Logika
                 for (int i = 0; i < count; i++)
                 {
                     dataAPI.GetBall(i).BallChanged += PositionChanged;
-                    
+
                 }
 
             }
@@ -67,10 +69,15 @@ namespace Logika
 
             public override void RemoveAllBalls()
             {
+                for (int i = 0; i < dataAPI.GetBallCount(); i++)
+                {
+                    dataAPI.GetBall(i).BallChanged -= PositionChanged;
+
+                }
                 dataAPI.RemoveBalls();
             }
 
-            private void PositionChanged(object? sender, EventArgs e) 
+            private void PositionChanged(object? sender, EventArgs e)
             {
                 if (sender == null)
                 {
@@ -85,44 +92,52 @@ namespace Logika
 
             private void DetectBallCollision(IBall firstBall)
             {
-               
+
 
                 lock (_collisionLock)
                 {
                     for (int i = 0; i < dataAPI.GetBallCount(); i++)
                     {
-                        
+
                         IBall secondBall = dataAPI.GetBall(i);
                         if (firstBall == secondBall)
                         {
                             continue;
                         }
-                        if (IsCollision(firstBall, secondBall))
-                        {
+                        
+                        if ( IsCollision(firstBall, secondBall))
+                        { 
+
+                     
                             Vector2 newFirstBallVel = NewVelocity(firstBall, secondBall);
                             Vector2 newSecondBallVel = NewVelocity(secondBall, firstBall);
 
                             firstBall.Velocity = newFirstBallVel;
                             secondBall.Velocity = newSecondBallVel;
+
                         }
+
                     }
+                    
                 }
             }
+
+            
 
             private Vector2 NewVelocity(IBall firstBall, IBall secondBall)
             {
                 var ball1Vel = firstBall.Velocity;
                 var ball2Vel = secondBall.Velocity;
-                var posDiff = firstBall.Position - secondBall.Position;
+                var distance = firstBall.Position - secondBall.Position;
                 return firstBall.Velocity -
                        2.0f * secondBall.Mass / (firstBall.Mass + secondBall.Mass)
-                       * (Vector2.Dot(ball1Vel - ball2Vel, posDiff) * posDiff) /
-                       (float)Math.Pow(posDiff.Length(), 2);
+                       * (Vector2.Dot(ball1Vel - ball2Vel, distance) * distance) /
+                       (float)Math.Pow(distance.Length(), 2);
             }
 
             private bool IsCollision(IBall firstBall, IBall secondBall)
             {
-                if(firstBall == null || secondBall == null)
+                if (firstBall == null || secondBall == null)
                 {
                     return false;
                 }
@@ -132,24 +147,24 @@ namespace Logika
 
             private void DetectWallCollision(IBall ball)
             {
-               
+
                 Vector2 newVel = new Vector2(ball.Velocity.X, ball.Velocity.Y);
                 int Radius = ball.Diameter / 2;
-                if (ball.Position.X <= 0)
+                if (ball.Position.X - Radius <= 0)
                 {
                     newVel.X = -ball.Velocity.X;
 
                 }
-                else if (ball.Position.X + ball.Diameter >= Width)
+                else if (ball.Position.X + Radius >= Width)
                 {
                     newVel.X = -ball.Velocity.X;
 
                 }
-                if (ball.Position.Y <= 0)
+                if (ball.Position.Y - Radius <= 0)
                 {
                     newVel.Y = -ball.Velocity.Y;
                 }
-                else if (ball.Position.Y + ball.Diameter >= Height)
+                else if (ball.Position.Y + Radius >= Height)
                 {
                     newVel.Y = -ball.Velocity.Y;
 
@@ -166,5 +181,5 @@ namespace Logika
         }
 
     }
-    
+
 }

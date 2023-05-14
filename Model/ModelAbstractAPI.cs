@@ -7,12 +7,18 @@ using System.Diagnostics;
 
 namespace Model
 {
+    public interface IBall : INotifyPropertyChanged
+    {
+        int Id { get; }
+        float Top { get; }
+        double Left { get; }
+        int Diameter { get; }
+    }
+
     public abstract class ModelAbstractAPI
     {
         public abstract int width { get; }
         public abstract int height { get; }
-
-        public abstract ObservableCollection<IBall> getBalls(); // zmienic !!!
 
         public abstract void AddBalls(int number);
 
@@ -64,15 +70,14 @@ namespace Model
         private void UpdateBall(object? sender, BallChangedEventArgs args)
         {
 
-           
+            
             if(args.Ball.Id >= Balls.Count)
             {
                 return;
             }
-            Balls[args.Ball.Id].Move(args.Ball.X, args.Ball.Y);
-         
+            Balls[args.Ball.Id].Move(args.Ball.X - args.Ball.Diameter/2, args.Ball.Y - args.Ball.Diameter / 2);
+            
         }
-       
-        public override ObservableCollection<IBall> getBalls() => logicAPI.GetBalls();
+      
     }
 }

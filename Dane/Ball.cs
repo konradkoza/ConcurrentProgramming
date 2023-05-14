@@ -10,88 +10,89 @@ using System.Threading.Tasks;
 
 namespace Data
 {
+   
     internal class Ball : IBall
-    {
-        private Task task;
-
-        private bool _move = true;
-
-        private int _diameter;
-
-        public Ball(float x, float y, int mass, Vector2 velocity, int diameter, int id)
         {
-            Id = id;
-            _position = new Vector2(x, y);
-            _velocity = velocity;
-            _diameter = diameter;
-            Mass = mass;
-            task = Task.Run(Move);
-        }
+            private Task task;
 
-        public event EventHandler<BallChangedEventArgs>? BallChanged;
+            private bool _move = true;
 
-        private Vector2 _position;
+            private int _diameter;
 
-        public Vector2 Position
-        {
-            get => _position;
-
-            private set
+            public Ball(float x, float y, int mass, Vector2 velocity, int diameter, int id)
             {
-                _position = value;
+                Id = id;
+                _position = new Vector2(x, y);
+                _velocity = velocity;
+                _diameter = diameter;
+                Mass = mass;
+                task = Task.Run(Move);
             }
-        }
 
-        private Vector2 _velocity;
+            public event EventHandler<BallChangedEventArgs>? BallChanged;
 
-        public Vector2 Velocity
-        {
-            get => _velocity;
-            set
+            private Vector2 _position;
+
+            public Vector2 Position
             {
+                get => _position;
 
-                _velocity = value;
-
+                private set
+                {
+                    _position = value;
+                }
             }
-        }
 
-        public int Diameter
-        {
-            get => _diameter;
-        }
+            private Vector2 _velocity;
 
-        public float X => _position.X;
-
-        public float Y => _position.Y;
-
-        public int Mass { get; }
-
-
-        public int Id { get; }
-
-        private async void Move()
-        {
-            while (_move)
+            public Vector2 Velocity
             {
-                Position += _velocity;
+                get => _velocity;
+                set
+                {
+
+                    _velocity = value;
+
+                }
+            }
+
+            public int Diameter
+            {
+                get => _diameter;
+            }
+
+            public float X => _position.X;
+
+            public float Y => _position.Y;
+
+            public int Mass { get; }
+
+
+            public int Id { get; }
+
+            private async void Move()
+            {
+                while (_move)
+                {
+                    Position += _velocity;
               
-                BallChanged?.Invoke(this, new BallChangedEventArgs(this));
-                float delay = 10 / _velocity.Length();
-                Debug.WriteLine(delay);
-                await Task.Delay((int)(delay > 0 ? delay : 10));
+                    BallChanged?.Invoke(this, new BallChangedEventArgs(this));
+                    float delay = 40 / _velocity.Length();
+                    Debug.WriteLine(delay);
+                    await Task.Delay((int)delay);
+                }
+
             }
 
-        }
+            public void StopMovement()
+            {
+                _move = false;
+            }
 
-        public void StopMovement()
-        {
-            _move = false;
+            public void Dispose()
+            {
+                task.Dispose();
+                _move = false;  
+            }
         }
-
-        public void Dispose()
-        {
-            task.Dispose();
-            _move = false;  
-        }
-    }
 }
