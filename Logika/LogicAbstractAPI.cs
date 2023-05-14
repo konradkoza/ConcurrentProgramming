@@ -123,7 +123,11 @@ namespace Logika
 
                             Vector2 newFirstBallVel = NewVelocity(firstBall, secondBall);
                             Vector2 newSecondBallVel = NewVelocity(secondBall, firstBall);
-
+                            if (Vector2.Distance(firstBall.Position,  secondBall.Position) > Vector2.Distance(
+                                firstBall.Position + newFirstBallVel, secondBall.Position + newSecondBallVel))
+                            {
+                                return;
+                            }
                             firstBall.Velocity = newFirstBallVel;
                             secondBall.Velocity = newSecondBallVel;
 
@@ -191,7 +195,7 @@ namespace Logika
 
                 Vector2 newVel = new Vector2(ball.Velocity.X, ball.Velocity.Y);
                 int Radius = ball.Diameter / 2;
-                if (ball.Position.X - Radius <= -1)
+                if (ball.Position.X - Radius <= 0)
                 {
                     newVel.X = Math.Abs(ball.Velocity.X);
 
@@ -201,7 +205,7 @@ namespace Logika
                     newVel.X = -Math.Abs(ball.Velocity.X);
 
                 }
-                if (ball.Position.Y - Radius <= -1)
+                if (ball.Position.Y - Radius <= 0)
                 {
                     newVel.Y = Math.Abs(ball.Velocity.Y);
                 }
