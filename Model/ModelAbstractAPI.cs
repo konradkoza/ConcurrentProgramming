@@ -65,7 +65,7 @@ namespace Model
         {
 
             Debug.WriteLine("Ball" + args.Ball.Id + " updated");
-            if(args.Ball.Id > Balls.Count)
+            if(args.Ball.Id >= Balls.Count)
             {
                 return;
             }

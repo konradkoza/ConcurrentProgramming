@@ -38,7 +38,7 @@ namespace Data
 
             private set
             {
-                _velocity = value;
+                _position = value;
             }
         }
 
@@ -74,7 +74,7 @@ namespace Data
             while (_move)
             {
                 Position += _velocity;
-
+                Debug.WriteLine("Position of ball" + this.Id + "Changed" + "X " + this.X + "Y " + this.Y);
                 BallChanged?.Invoke(this, new BallChangedEventArgs(this));
                 int delay = (int)_velocity.Length() / 10;
                 //Debug.WriteLine(delay);

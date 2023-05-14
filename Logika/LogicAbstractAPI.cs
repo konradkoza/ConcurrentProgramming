@@ -91,32 +91,33 @@ namespace Logika
                 {
                     for (int i = 0; i < dataAPI.GetBallCount(); i++)
                     {
+                        
                         IBall secondBall = dataAPI.GetBall(i);
-                        if(IsCollision(firstBall, secondBall))
+                        if (firstBall == secondBall)
                         {
-                            Vector2 normal = Vector2.Normalize(secondBall.Position - firstBall.Position);
-                            Vector2 tangent = new Vector2(-normal.Y, normal.X);
+                            continue;
+                        }
+                        if (IsCollision(firstBall, secondBall))
+                        {
+                            Vector2 newFirstBallVel = NewVelocity(firstBall, secondBall);
+                            Vector2 newSecondBallVel = NewVelocity(secondBall, firstBall);
 
-
-                            float ball1InitialNormalVelocity = Vector2.Dot(normal, firstBall.Velocity);
-                            float ball1InitialTangentVelocity = Vector2.Dot(tangent, firstBall.Velocity);
-                            float ball2InitialNormalVelocity = Vector2.Dot(normal, secondBall.Velocity);
-                            float ball2InitialTangentVelocity = Vector2.Dot(tangent, secondBall.Velocity);
-
-
-                            float ball1FinalNormalVelocity = (ball1InitialNormalVelocity * (firstBall.Mass - secondBall.Mass) +
-                                2 * secondBall.Mass * ball2InitialNormalVelocity) / (firstBall.Mass + secondBall.Mass);
-                            float ball2FinalNormalVelocity = (ball2InitialNormalVelocity * (secondBall.Mass - firstBall.Mass) +
-                                2 * firstBall.Mass * ball1InitialNormalVelocity) / (firstBall.Mass + secondBall.Mass);
-
-                            Vector2 ball1FinalVelocity = ball1FinalNormalVelocity * normal + ball1InitialTangentVelocity * tangent;
-                            Vector2 ball2FinalVelocity = ball2FinalNormalVelocity * normal + ball2InitialTangentVelocity * tangent;
-
-                            firstBall.Velocity = ball1FinalVelocity;
-                            secondBall.Velocity = ball2FinalVelocity;
+                            firstBall.Velocity = newFirstBallVel;
+                            secondBall.Velocity = newSecondBallVel;
                         }
                     }
                 }
+            }
+
+            private Vector2 NewVelocity(IBall firstBall, IBall secondBall)
+            {
+                var ball1Vel = firstBall.Velocity;
+                var ball2Vel = secondBall.Velocity;
+                var posDiff = firstBall.Position - secondBall.Position;
+                return firstBall.Velocity -
+                       2.0f * secondBall.Mass / (firstBall.Mass + secondBall.Mass)
+                       * (Vector2.Dot(ball1Vel - ball2Vel, posDiff) * posDiff) /
+                       (float)Math.Pow(posDiff.Length(), 2);
             }
 
             private bool IsCollision(IBall firstBall, IBall secondBall)
@@ -134,21 +135,21 @@ namespace Logika
                
                 Vector2 newVel = new Vector2(ball.Velocity.X, ball.Velocity.Y);
                 int Radius = ball.Diameter / 2;
-                if (ball.Position.X - Radius <= 0)
+                if (ball.Position.X <= 0)
                 {
                     newVel.X = -ball.Velocity.X;
 
                 }
-                else if (ball.Position.X + Radius >= Width)
+                else if (ball.Position.X + ball.Diameter >= Width)
                 {
                     newVel.X = -ball.Velocity.X;
 
                 }
-                if (ball.Position.Y - Radius <= 0)
+                if (ball.Position.Y <= 0)
                 {
                     newVel.Y = -ball.Velocity.Y;
                 }
-                else if (ball.Position.Y + Radius >= Height)
+                else if (ball.Position.Y + ball.Diameter >= Height)
                 {
                     newVel.Y = -ball.Velocity.Y;
 

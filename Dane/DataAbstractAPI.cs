@@ -59,8 +59,8 @@ namespace Data
             {
                 for(int i  = 0; i < count; i++)
                 {
-                    float velX = (float)((_random.NextDouble() - 0.5) * 4);
-                    float velY = (float)((_random.NextDouble() - 0.5) * 4);
+                    float velX = (float)((_random.NextDouble() - 0.5) * 8);
+                    float velY = (float)((_random.NextDouble() - 0.5) * 8);
                     while (velX == 0 & velY == 0)
                     {
                         velX = _random.Next(-2, 2);
