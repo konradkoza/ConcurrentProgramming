@@ -74,11 +74,11 @@ namespace Data
             while (_move)
             {
                 Position += _velocity;
-                Debug.WriteLine("Position of ball" + this.Id + "Changed" + "X " + this.X + "Y " + this.Y);
+              
                 BallChanged?.Invoke(this, new BallChangedEventArgs(this));
-                int delay = (int)_velocity.Length() / 10;
-                //Debug.WriteLine(delay);
-                await Task.Delay(delay > 0 ? delay : 10);
+                float delay = 10 / _velocity.Length();
+                Debug.WriteLine(delay);
+                await Task.Delay((int)(delay > 0 ? delay : 10));
             }
 
         }

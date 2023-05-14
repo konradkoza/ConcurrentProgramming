@@ -64,7 +64,7 @@ namespace Model
         private void UpdateBall(object? sender, BallChangedEventArgs args)
         {
 
-            Debug.WriteLine("Ball" + args.Ball.Id + " updated");
+           
             if(args.Ball.Id >= Balls.Count)
             {
                 return;
