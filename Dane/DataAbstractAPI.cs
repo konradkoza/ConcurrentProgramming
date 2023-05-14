@@ -67,7 +67,7 @@ namespace Data
                     }
 
                     Vector2 vel = new Vector2(velX, velY);
-                    int diameter = _random.Next(10, 40);
+                    int diameter = _random.Next(30, 50);
                     int ballMass = diameter * 2;
                     float ballX = (float)(_random.Next(20 + diameter, Width - diameter - 20) + _random.NextDouble());
                     float ballY = (float)(_random.Next(20 + diameter, Height - diameter - 20) + _random.NextDouble());

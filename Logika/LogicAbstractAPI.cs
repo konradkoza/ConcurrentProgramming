@@ -15,7 +15,7 @@ namespace Logika
         public abstract int GetBallDiameter(int id);
         public abstract float GetBallX(int id);
         public abstract float GetBallY(int id);
-        public abstract event EventHandler<(int Id, float X, float Y, int Diameter)> LogicLayerEvent;
+        public abstract event EventHandler<(int Id, float X, float Y, int Diameter)>? LogicLayerEvent;
 
         public abstract void AddBalls(int count);
 
@@ -34,7 +34,7 @@ namespace Logika
             private readonly object _collisionLock = new();
             public override int Width { get; set; }
             public override int Height { get; set; }
-            public override event EventHandler<(int Id, float X, float Y, int Diameter)> LogicLayerEvent;
+            public override event EventHandler<(int Id, float X, float Y, int Diameter)>? LogicLayerEvent;
 
             private DataAbstractAPI dataAPI;
         
@@ -161,23 +161,23 @@ namespace Logika
 
                 Vector2 newVel = new Vector2(ball.Velocity.X, ball.Velocity.Y);
                 int Radius = ball.Diameter / 2;
-                if (ball.Position.X - Radius <= 0)
+                if (ball.Position.X - Radius <= -1)
                 {
-                    newVel.X = -ball.Velocity.X;
+                    newVel.X = Math.Abs(ball.Velocity.X);
 
                 }
                 else if (ball.Position.X + Radius >= Width)
                 {
-                    newVel.X = -ball.Velocity.X;
+                    newVel.X = -Math.Abs(ball.Velocity.X);
 
                 }
-                if (ball.Position.Y - Radius <= 0)
+                if (ball.Position.Y - Radius <= -1)
                 {
-                    newVel.Y = -ball.Velocity.Y;
+                    newVel.Y = Math.Abs(ball.Velocity.Y);
                 }
                 else if (ball.Position.Y + Radius >= Height)
                 {
-                    newVel.Y = -ball.Velocity.Y;
+                    newVel.Y = -Math.Abs(ball.Velocity.Y);
 
                 }
 
