@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Data
 {
@@ -67,7 +64,7 @@ namespace Data
                     }
 
                     Vector2 vel = new Vector2(velX, velY);
-                    int diameter = _random.Next(30, 50);
+                    int diameter = _random.Next(20, 40);
                     int ballMass = diameter * 2;
                     float ballX = (float)(_random.Next(20 + diameter, Width - diameter - 20) + _random.NextDouble());
                     float ballY = (float)(_random.Next(20 + diameter, Height - diameter - 20) + _random.NextDouble());

@@ -1,11 +1,17 @@
-﻿using Logika;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 
 namespace Model
 {
-    public class BallModel : INotifyPropertyChanged
+    public interface IBall : INotifyPropertyChanged
+    {
+        float Left { get;}
+        float Top { get; }
+        int Diameter { get; }
+    }
+
+    public class BallModel : IBall
     {
         private float _left;
         private float _top;
@@ -16,7 +22,7 @@ namespace Model
         public float Left
         {
             get { return _left; }
-            set {
+            private set {
                 _left = value;
                 OnPropertyChanged();
             }
@@ -25,7 +31,7 @@ namespace Model
         public float Top
         {
             get { return _top; }
-            set {
+            private set {
                 _top = value;
                 OnPropertyChanged();
             }

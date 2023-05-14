@@ -7,13 +7,7 @@ using System.Diagnostics;
 
 namespace Model
 {
-    public interface IBall : INotifyPropertyChanged
-    {
-        int Id { get; }
-        float X { get; }
-        float Y { get; }
-        int Diameter { get; }
-    }
+  
 
     public abstract class ModelAbstractAPI
     {
@@ -28,57 +22,59 @@ namespace Model
         {
             return new ModelAPI(w, h);
         }
+
+        internal class ModelAPI : ModelAbstractAPI
+        {
+
+            public override int width { get; }
+            public override int height { get; }
+            private LogicAbstractAPI logicAPI;
+
+
+            public ModelAPI(int w, int h)
+            {
+                width = w;
+                height = h;
+                logicAPI = LogicAbstractAPI.CreateAPI(width, height);
+                Balls = new ObservableCollection<BallModel>();
+                logicAPI.LogicLayerEvent += UpdateBall;
+            }
+
+
+
+            public override void AddBalls(int number)
+            {
+                logicAPI.AddBalls(number);
+                for (int i = 0; i < number; i++)
+                {
+                    BallModel ballModel = new BallModel(logicAPI.GetBallX(i), logicAPI.GetBallY(i), logicAPI.GetBallDiameter(i));
+                    Balls.Add(ballModel);
+                }
+            }
+
+            public override void Stop()
+            {
+
+                logicAPI.RemoveAllBalls();
+                Balls.Clear();
+
+            }
+
+            private void UpdateBall(object? sender, (int id, float x, float y, int diameter) args)
+            {
+
+
+                if (args.id >= Balls.Count)
+                {
+                    return;
+                }
+                Balls[args.id].Move(args.x - args.diameter / 2, args.y - args.diameter / 2);
+
+            }
+
+
+        }
     }
 
-    internal class ModelAPI : ModelAbstractAPI
-    {
-
-        public override int width { get; }
-        public override int height { get; }
-        private LogicAbstractAPI logicAPI;
-
-
-        public ModelAPI(int w, int h)
-        {
-            width = w;
-            height = h;
-            logicAPI = LogicAbstractAPI.CreateAPI(width, height);       
-            Balls = new ObservableCollection<BallModel>();
-            logicAPI.LogicLayerEvent += UpdateBall;
-        }
-
-
-
-        public override void AddBalls(int number)
-        {
-            logicAPI.AddBalls(number);
-            for (int i = 0; i < number; i++)
-            {
-                BallModel ballModel = new BallModel(logicAPI.GetBallX(i), logicAPI.GetBallY(i), logicAPI.GetBallDiameter(i));
-                Balls.Add(ballModel);
-            }
-        }
-
-        public override void Stop()
-        {
-            
-            logicAPI.RemoveAllBalls();
-            Balls.Clear();
-                       
-        }
-
-        private void UpdateBall(object? sender, (int id, float x, float y, int diameter) args)
-        {
-
-            
-            if(args.id >= Balls.Count)
-            {
-                return;
-            }
-            Balls[args.id].Move(args.x - args.diameter/2, args.y - args.diameter / 2);
-            
-        }
-     
-
-    }
+   
 }

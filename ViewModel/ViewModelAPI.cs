@@ -8,8 +8,8 @@ namespace ViewModel
 {
     public class ViewModelAPI : INotifyPropertyChanged
     {
-        public int Width = 500;
-        public int Height = 500;
+        public int Width { get; } = 500;
+        public int Height { get; } = 500;
         public bool isStartEnabled { get; set; } = true;
 
         public bool isStopEnabled { get; set; } = false;
