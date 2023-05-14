@@ -10,8 +10,8 @@ namespace Model
     public interface IBall : INotifyPropertyChanged
     {
         int Id { get; }
-        float Top { get; }
-        double Left { get; }
+        float X { get; }
+        float Y { get; }
         int Diameter { get; }
     }
 
@@ -54,7 +54,7 @@ namespace Model
             logicAPI.AddBalls(number);
             for (int i = 0; i < number; i++)
             {
-                BallModel ballModel = new BallModel(logicAPI.GetBall(i).X, logicAPI.GetBall(i).Y, logicAPI.GetBall(i).Diameter);
+                BallModel ballModel = new BallModel(logicAPI.GetBallX(i), logicAPI.GetBallY(i), logicAPI.GetBallDiameter(i));
                 Balls.Add(ballModel);
             }
         }
@@ -67,17 +67,18 @@ namespace Model
                        
         }
 
-        private void UpdateBall(object? sender, BallChangedEventArgs args)
+        private void UpdateBall(object? sender, (int id, float x, float y, int diameter) args)
         {
 
             
-            if(args.Ball.Id >= Balls.Count)
+            if(args.id >= Balls.Count)
             {
                 return;
             }
-            Balls[args.Ball.Id].Move(args.Ball.X - args.Ball.Diameter/2, args.Ball.Y - args.Ball.Diameter / 2);
+            Balls[args.id].Move(args.x - args.diameter/2, args.y - args.diameter / 2);
             
         }
-      
+     
+
     }
 }

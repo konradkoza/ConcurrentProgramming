@@ -12,8 +12,10 @@ namespace Logika
     {
         public abstract int Width { get; set; }
         public abstract int Height { get; set; }
-
-        public abstract event EventHandler<BallChangedEventArgs> LogicLayerEvent;
+        public abstract int GetBallDiameter(int id);
+        public abstract float GetBallX(int id);
+        public abstract float GetBallY(int id);
+        public abstract event EventHandler<(int Id, float X, float Y, int Diameter)> LogicLayerEvent;
 
         public abstract void AddBalls(int count);
 
@@ -21,7 +23,6 @@ namespace Logika
         public abstract int GetBallsCount();
 
 
-        public abstract IBall GetBall(int id);
         public abstract void RemoveAllBalls();
         public static LogicAbstractAPI CreateAPI(int width, int height)
         {
@@ -33,7 +34,7 @@ namespace Logika
             private readonly object _collisionLock = new();
             public override int Width { get; set; }
             public override int Height { get; set; }
-            public override event EventHandler<BallChangedEventArgs> LogicLayerEvent;
+            public override event EventHandler<(int Id, float X, float Y, int Diameter)> LogicLayerEvent;
 
             private DataAbstractAPI dataAPI;
         
@@ -62,9 +63,19 @@ namespace Logika
                 return dataAPI.GetBalls();
             }
 
-            public override IBall GetBall(int id)
+            public override float GetBallX(int id)
             {
-                return dataAPI.GetBall(id);
+                return dataAPI.GetBall(id).X;
+            }
+
+            public override float GetBallY(int id)
+            {
+                return dataAPI.GetBall(id).Y;
+            }
+
+            public override int GetBallDiameter(int id)
+            {
+                return dataAPI.GetBall(id).Diameter;
             }
 
             public override void RemoveAllBalls()
@@ -86,7 +97,7 @@ namespace Logika
                 IBall ball = (IBall)sender;
                 DetectBallCollision(ball);
                 DetectWallCollision(ball);
-                LogicLayerEvent?.Invoke(this, new BallChangedEventArgs(ball));
+                LogicLayerEvent?.Invoke(this, (ball.Id, ball.X, ball.Y, ball.Diameter));
             }
 
 
