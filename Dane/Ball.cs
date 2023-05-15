@@ -77,8 +77,7 @@ namespace Data
                     Position += _velocity;
               
                     BallChanged?.Invoke(this, new BallChangedEventArgs(this));
-                    float delay = 40 / _velocity.Length();
-                    Debug.WriteLine(delay);
+                    float delay = 20 / _velocity.Length();
                     await Task.Delay((int)delay);
                 }
 
