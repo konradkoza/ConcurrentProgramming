@@ -11,8 +11,8 @@ namespace Model
 
     public abstract class ModelAbstractAPI
     {
-        public abstract int width { get; }
-        public abstract int height { get; }
+        public abstract int _width { get; }
+        public abstract int _height { get; }
 
         public abstract void AddBalls(int number);
 
@@ -26,28 +26,28 @@ namespace Model
         internal class ModelAPI : ModelAbstractAPI
         {
 
-            public override int width { get; }
-            public override int height { get; }
-            private LogicAbstractAPI logicAPI;
+            public override int _width { get; }
+            public override int _height { get; }
+            private LogicAbstractAPI _logicAPI;
 
 
             public ModelAPI(int w, int h)
             {
-                width = w;
-                height = h;
-                logicAPI = LogicAbstractAPI.CreateAPI(width, height);
+                _width = w;
+                _height = h;
+                _logicAPI = LogicAbstractAPI.CreateAPI(_width, _height);
                 Balls = new ObservableCollection<BallModel>();
-                logicAPI.LogicLayerEvent += UpdateBall;
+                _logicAPI.LogicLayerEvent += UpdateBall;
             }
 
 
 
             public override void AddBalls(int number)
             {
-                logicAPI.AddBalls(number);
+                _logicAPI.AddBalls(number);
                 for (int i = 0; i < number; i++)
                 {
-                    BallModel ballModel = new BallModel(logicAPI.GetBallX(i), logicAPI.GetBallY(i), logicAPI.GetBallDiameter(i));
+                    BallModel ballModel = new BallModel(_logicAPI.GetBallX(i), _logicAPI.GetBallY(i), _logicAPI.GetBallDiameter(i));
                     Balls.Add(ballModel);
                 }
             }
@@ -55,7 +55,7 @@ namespace Model
             public override void Stop()
             {
 
-                logicAPI.RemoveAllBalls();
+                _logicAPI.RemoveAllBalls();
                 Balls.Clear();
 
             }

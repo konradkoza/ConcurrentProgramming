@@ -9,14 +9,14 @@ namespace ViewModel
 {
     internal class RelayCommand : ICommand
     {
-        private Action action;
+        private Action _action;
 
 
         public event EventHandler? CanExecuteChanged;
 
         public RelayCommand(Action action)
         {
-            this.action = action;
+            this._action = action;
         }
 
         public bool CanExecute(object? parameter)
@@ -27,7 +27,7 @@ namespace ViewModel
 
         public void Execute(object? parameter)
         {
-            action();
+            _action();
         }
 
         public void RaiseCanExecuteChanged()

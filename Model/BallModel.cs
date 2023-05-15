@@ -15,7 +15,7 @@ namespace Model
     {
         private float _left;
         private float _top;
-        private int diameter;
+        private int _diameter;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -39,7 +39,7 @@ namespace Model
 
         public int Diameter
         {
-            get { return diameter; }
+            get { return _diameter; }
         }
 
 
@@ -48,7 +48,7 @@ namespace Model
             Top = y - diameter / 2;
             Left = x - diameter / 2;
 
-            this.diameter = diameter;
+            this._diameter = diameter;
         }
 
         public void Move(float x, float y)

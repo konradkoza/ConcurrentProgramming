@@ -38,11 +38,11 @@ namespace Logika
             public override int Height { get; set; }
             public override event EventHandler<(int Id, float X, float Y, int Diameter)>? LogicLayerEvent;
             private ConcurrentDictionary<(int, int), bool> _collisionFlags = new ConcurrentDictionary<(int, int), bool>();
-            private DataAbstractAPI dataAPI;
+            private DataAbstractAPI _dataAPI;
         
             public LogicAPI(int width, int height, DataAbstractAPI? data)
             {
-                dataAPI = data != null ? data : DataAbstractAPI.CreateAPI(width, height);
+                _dataAPI = data != null ? data : DataAbstractAPI.CreateAPI(width, height);
                 Width = width;
                 Height = height;
             }
@@ -51,10 +51,10 @@ namespace Logika
 
             public override void AddBalls(int count)
             {
-                dataAPI.CreateBalls(count);
+                _dataAPI.CreateBalls(count);
                 for (int i = 0; i < count; i++)
                 {
-                    dataAPI.GetBall(i).BallChanged += PositionChanged;
+                    _dataAPI.GetBall(i).BallChanged += PositionChanged;
 
                 }
 
@@ -62,32 +62,32 @@ namespace Logika
 
             public override ObservableCollection<IBall> GetBalls()
             {
-                return dataAPI.GetBalls();
+                return _dataAPI.GetBalls();
             }
 
             public override float GetBallX(int id)
             {
-                return dataAPI.GetBall(id).X;
+                return _dataAPI.GetBall(id).X;
             }
 
             public override float GetBallY(int id)
             {
-                return dataAPI.GetBall(id).Y;
+                return _dataAPI.GetBall(id).Y;
             }
 
             public override int GetBallDiameter(int id)
             {
-                return dataAPI.GetBall(id).Diameter;
+                return _dataAPI.GetBall(id).Diameter;
             }
 
             public override void RemoveAllBalls()
             {
-                for (int i = 0; i < dataAPI.GetBallCount(); i++)
+                for (int i = 0; i < _dataAPI.GetBallCount(); i++)
                 {
-                    dataAPI.GetBall(i).BallChanged -= PositionChanged;
+                    _dataAPI.GetBall(i).BallChanged -= PositionChanged;
 
                 }
-                dataAPI.RemoveBalls();
+                _dataAPI.RemoveBalls();
             }
 
             private void PositionChanged(object? sender, EventArgs e)
@@ -109,10 +109,10 @@ namespace Logika
 
                 lock (_collisionLock)
                 {
-                    for (int i = 0; i < dataAPI.GetBallCount(); i++)
+                    for (int i = 0; i < _dataAPI.GetBallCount(); i++)
                     {
 
-                        IBall secondBall = dataAPI.GetBall(i);
+                        IBall secondBall = _dataAPI.GetBall(i);
                         if (firstBall == secondBall)
                         {
                             continue;
@@ -222,7 +222,7 @@ namespace Logika
 
             public override int GetBallsCount()
             {
-                return dataAPI.GetBallCount();
+                return _dataAPI.GetBallCount();
             }
 
         }

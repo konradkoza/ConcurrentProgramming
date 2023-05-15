@@ -10,11 +10,11 @@ namespace ViewModel
     {
         public int Width { get; } = 500;
         public int Height { get; } = 500;
-        public bool isStartEnabled { get; set; } = true;
+        private bool _isStartEnabled { get; set; } = true;
 
-        public bool isStopEnabled { get; set; } = false;
+        private bool _isStopEnabled { get; set; } = false;
 
-        public string inputNumber = "3";
+        private string _inputNumber = "3";
 
         public ICommand OnClickStartButton { get; set; }
 
@@ -24,24 +24,24 @@ namespace ViewModel
 
         public ObservableCollection<BallModel> Balls { get; }
 
-        private ModelAbstractAPI modelAPI;
+        private ModelAbstractAPI _modelAPI;
 
         public bool IsStartEnabled
         {
-            get { return isStartEnabled; }
+            get { return _isStartEnabled; }
             set
             {
-                isStartEnabled = value;
+                _isStartEnabled = value;
                 OnPropertyChanged();
             }
         }
 
         public bool IsStopEnabled
         {
-            get { return isStopEnabled; }
+            get { return _isStopEnabled; }
             set
             {
-                isStopEnabled = value;
+                _isStopEnabled = value;
                 OnPropertyChanged();
             }
         }
@@ -50,13 +50,13 @@ namespace ViewModel
         {
             OnClickStartButton = new RelayCommand(() => StartButtonHandle());
             OnClickStopButton = new RelayCommand(() => StopButtonHandle());
-            modelAPI = ModelAbstractAPI.CreateApi(Width, Height);
-            Balls = modelAPI.Balls;
+            _modelAPI = ModelAbstractAPI.CreateApi(Width, Height);
+            Balls = _modelAPI.Balls;
         }
 
         public void StopButtonHandle()
         {
-            modelAPI.Stop();
+            _modelAPI.Stop();
             Balls.Clear();
             this.IsStartEnabled = true;
             this.IsStopEnabled = false;
@@ -70,17 +70,17 @@ namespace ViewModel
             {
                 this.IsStartEnabled = false;
                 this.IsStopEnabled = true;
-                modelAPI.AddBalls(value);
+                _modelAPI.AddBalls(value);
             }
 
         }
 
         public string InputNumber
         {
-            get { return inputNumber; }
+            get { return _inputNumber; }
             set
             {
-                inputNumber = value;
+                _inputNumber = value;
                 OnPropertyChanged();
             }
         }
