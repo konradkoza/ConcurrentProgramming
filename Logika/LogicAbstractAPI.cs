@@ -24,9 +24,11 @@ namespace Logika
 
 
         public abstract void RemoveAllBalls();
-        public static LogicAbstractAPI CreateAPI(int width, int height)
+        public static LogicAbstractAPI CreateAPI(int width, int height, DataAbstractAPI? data = null)
         {
-            return new LogicAPI(width, height);
+            return new LogicAPI(width, height, data);
+
+
         }
 
         internal class LogicAPI : LogicAbstractAPI
@@ -38,9 +40,9 @@ namespace Logika
             private ConcurrentDictionary<(int, int), bool> _collisionFlags = new ConcurrentDictionary<(int, int), bool>();
             private DataAbstractAPI dataAPI;
         
-            public LogicAPI(int width, int height)
+            public LogicAPI(int width, int height, DataAbstractAPI? data)
             {
-                dataAPI = DataAbstractAPI.CreateAPI(width, height);
+                dataAPI = data != null ? data : DataAbstractAPI.CreateAPI(width, height);
                 Width = width;
                 Height = height;
             }
