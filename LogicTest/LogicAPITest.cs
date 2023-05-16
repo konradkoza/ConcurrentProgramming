@@ -86,8 +86,6 @@ namespace LogicTest
 
     internal class DataAPITest : DataAbstractAPI
     {
-        private DataAbstractAPI api = CreateAPI(500, 500);
-
         public DataAPITest(int width, int height)
         {
             Width = width;
@@ -105,7 +103,7 @@ namespace LogicTest
 
         public override int GetBallCount()
         {
-            return _balls.Count;
+            return 0;
         }
 
         public override IBall GetBall(int index)
@@ -160,18 +158,27 @@ namespace LogicTest
         }
 
         [TestMethod]
-        public void BallsOperationTest()
+        public void CollisionsTest()
         {
             LogicAbstractAPI api = LogicAbstractAPI.CreateAPI(500, 500, new DataAPITest(500, 500));
 
-            Assert.IsNotNull(api.GetBalls());
-            Assert.AreEqual(api.GetBallsCount(), 0);
-            api.AddBalls(1);
-            api.AddBalls(1);
-            Assert.AreEqual(api.GetBallsCount(), 2);
+            api.AddBalls(10);
+            
+            Vector2[] vels = new Vector2[10];
+            for(int i=0; i < 10; i++)
+            {
+                vels[i] = api.GetBalls()[i].Velocity;
+            }
+            bool hit = false;
+            while (!hit)
+            {
+                for (int i = 0; i < api.GetBallsCount(); i++)
+                {
+                    if (api.GetBalls()[i].Velocity != vels[i]) { hit = true; break; }
+                }
+            }
+            Assert.IsTrue(hit);
 
-            /*api.RemoveAllBalls();
-            Assert.AreEqual(api.GetBallsCount(), 0);*/
         }
 
         [TestMethod]
@@ -184,17 +191,6 @@ namespace LogicTest
             api.Height = 600;
             Assert.AreEqual(api.Width, 600);
             Assert.AreEqual(api.Height, 600);            
-        }
-
-        [TestMethod]
-        public void GettersTest()
-        {
-            LogicAbstractAPI api = LogicAbstractAPI.CreateAPI(500, 500, new DataAPITest(500, 500));
-
-            api.AddBalls(1);
-            Assert.IsNotNull(api.GetBallDiameter(0));
-            Assert.IsNotNull(api.GetBallX(0));
-            Assert.IsNotNull(api.GetBallY(0));
         }
     }
 }

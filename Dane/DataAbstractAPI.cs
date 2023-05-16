@@ -38,8 +38,6 @@ namespace Data
  
             private readonly Random _random = new Random();
 
-            public override ObservableCollection<IBall> GetBalls() => _balls;
-
             public override int GetBallCount() 
             { 
                 return _balls.Count;

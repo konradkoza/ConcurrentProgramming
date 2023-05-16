@@ -60,11 +60,6 @@ namespace Logika
 
             }
 
-            public override ObservableCollection<IBall> GetBalls()
-            {
-                return _dataAPI.GetBalls();
-            }
-
             public override float GetBallX(int id)
             {
                 return _dataAPI.GetBall(id).X;
