@@ -148,8 +148,6 @@ namespace LogicTest
             LogicAbstractAPI api = LogicAbstractAPI.CreateAPI(500, 500, new DataAPITest(500, 500));
             api.AddBalls(3);
             Assert.IsTrue(api.GetBallsCount() == 3);
-            api.RemoveAllBalls();
-            Assert.IsTrue(api.GetBallsCount() == 0);
         }
 
         [TestMethod]
@@ -171,7 +169,6 @@ namespace LogicTest
                 }
 
             };
-            api.RemoveAllBalls();
 
         }
 
@@ -198,7 +195,6 @@ namespace LogicTest
                     lastDistance = Vector2.Distance(api.GetBallPosition(0), api.GetBallPosition(1));
                 }
             };
-            api.RemoveAllBalls();
         }
 
         [TestMethod]
