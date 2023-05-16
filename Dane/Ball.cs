@@ -19,8 +19,11 @@ namespace Data
 
             private int _diameter;
 
+            private Stopwatch _stopwatch;
+
             public Ball(float x, float y, int mass, Vector2 velocity, int diameter, int id)
             {
+                _stopwatch = new Stopwatch();
                 Id = id;
                 _position = new Vector2(x, y);
                 _velocity = velocity;
@@ -72,15 +75,25 @@ namespace Data
 
             private async void Move()
             {
+                int delay = 15;
+
                 while (_move)
                 {
-                    Position += _velocity;
-              
-                    BallChanged?.Invoke(this, EventArgs.Empty);
-                    float delay = 20 / _velocity.Length();
-                    await Task.Delay((int)delay);
+                    _stopwatch.Restart();
+                    _stopwatch.Start();
+
+                    Update(delay);
+                                       
+                    _stopwatch.Stop();
+                    await Task.Delay(delay - (int)_stopwatch.ElapsedMilliseconds < 0 ? 0 : delay - (int)_stopwatch.ElapsedMilliseconds);
                 }
 
+            }
+
+            private void Update(long time)
+            {
+                Position += _velocity * time;              
+                BallChanged?.Invoke(this, EventArgs.Empty);
             }
 
             public void Dispose()

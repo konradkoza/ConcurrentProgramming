@@ -97,7 +97,10 @@ namespace Logika
                     return;
                 }
                 IBall ball = (IBall)sender;
-                DetectBallCollision(ball);
+                lock (_collisionLock)
+                {
+                    DetectBallCollision(ball);
+                }
                 DetectWallCollision(ball);
                 LogicLayerEvent?.Invoke(this, (ball.Id, ball.X, ball.Y, ball.Diameter));
             }
@@ -107,8 +110,7 @@ namespace Logika
             {
 
 
-                lock (_collisionLock)
-                {
+                
                     for (int i = 0; i < _dataAPI.GetBallCount(); i++)
                     {
 
@@ -142,7 +144,7 @@ namespace Logika
 
                     }
                     
-                }
+               
             }
 
             private void MarkCollisionAsChecked(IBall firstBall, IBall secondBall)
