@@ -29,7 +29,7 @@ namespace Data
                 task = Task.Run(Move);
             }
 
-            public event EventHandler<BallChangedEventArgs>? BallChanged;
+            public event EventHandler? BallChanged;
 
             private Vector2 _position;
 
@@ -76,7 +76,7 @@ namespace Data
                 {
                     Position += _velocity;
               
-                    BallChanged?.Invoke(this, new BallChangedEventArgs(this));
+                    BallChanged?.Invoke(this, EventArgs.Empty);
                     float delay = 20 / _velocity.Length();
                     await Task.Delay((int)delay);
                 }

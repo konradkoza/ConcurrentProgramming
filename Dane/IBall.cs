@@ -18,7 +18,7 @@ namespace Data
 
         int Mass { get; }
 
-        event EventHandler<BallChangedEventArgs>? BallChanged;
+        event EventHandler? BallChanged;
 
         float X { get; }
         float Y { get; }
