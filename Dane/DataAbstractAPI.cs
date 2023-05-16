@@ -12,8 +12,6 @@ namespace Data
         public abstract void CreateBalls(int  count);
         public abstract void RemoveBalls();
 
-        public abstract ObservableCollection<IBall> GetBalls();
-
 
         public abstract int Width { get; }
         public abstract int Height { get; }
@@ -30,9 +28,9 @@ namespace Data
             {
                 Width = width;
                 Height = height;
-                _balls = new ObservableCollection<IBall>();
+                _balls = new List<IBall>();
             }
-            private ObservableCollection<IBall> _balls;
+            private List<IBall> _balls;
             public override int Width { get; }
             public override int Height { get; }
  

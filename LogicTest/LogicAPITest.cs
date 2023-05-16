@@ -1,25 +1,29 @@
 using Data;
-using System.Collections.ObjectModel;
 using System.Numerics;
 using Logika;
 
+
 namespace LogicTest
 {
-    internal class BallTest : IBall
-    {
+        [TestClass]
+        public class LogicAPITest
+        {
+
+        internal class BallTest : IBall
+        {
         private Task task;
 
         private bool _move = true;
 
         private int _diameter;
 
-        public BallTest(float x, float y, int mass, Vector2 velocity, int diameter, int id)
+        public BallTest(int id)
         {
             Id = id;
-            _position = new Vector2(x, y);
-            _velocity = velocity;
-            _diameter = diameter;
-            Mass = mass;
+            _position = new Vector2(200 - id * 50, 200);
+            _velocity = new Vector2((id * 2) + 1, 0);
+            _diameter = 30;
+            Mass = 60;
             task = Task.Run(Move);
         }
 
@@ -90,20 +94,18 @@ namespace LogicTest
         {
             Width = width;
             Height = height;
-            _balls = new ObservableCollection<IBall>();
+            _balls = new List<IBall>();
         }
-        private ObservableCollection<IBall> _balls;
+        private List<IBall> _balls;
         public override int Width { get; }
         public override int Height { get; }
 
 
         private readonly Random _random = new Random();
 
-        public override ObservableCollection<IBall> GetBalls() => _balls;
-
         public override int GetBallCount()
         {
-            return 0;
+            return _balls.Count();
         }
 
         public override IBall GetBall(int index)
@@ -115,21 +117,7 @@ namespace LogicTest
         {
             for (int i = 0; i < count; i++)
             {
-                float velX = (float)((_random.NextDouble() - 0.5) * 8);
-                float velY = (float)((_random.NextDouble() - 0.5) * 8);
-                while (velX == 0 & velY == 0)
-                {
-                    velX = _random.Next(-2, 2);
-                    velY = _random.Next(-2, 2);
-                }
-
-                Vector2 vel = new Vector2(velX, velY);
-                int diameter = _random.Next(20, 40);
-                int ballMass = diameter * 2;
-                float ballX = (float)(_random.Next(20 + diameter, Width - diameter - 20) + _random.NextDouble());
-                float ballY = (float)(_random.Next(20 + diameter, Height - diameter - 20) + _random.NextDouble());
-
-                BallTest ball = new BallTest(ballX, ballY, ballMass, vel, diameter, i);
+                BallTest ball = new BallTest(i);
                 _balls.Add(ball);
             }
         }
@@ -143,13 +131,10 @@ namespace LogicTest
             _balls.Clear();
         }
 
-
-
     }
 
-    [TestClass]
-    public class LogicAPITest
-    {
+
+
         [TestMethod]
         public void CreateAPITest()
         {
@@ -158,33 +143,67 @@ namespace LogicTest
         }
 
         [TestMethod]
-        public void CollisionsTest()
+        public void AddBallsTest()
         {
             LogicAbstractAPI api = LogicAbstractAPI.CreateAPI(500, 500, new DataAPITest(500, 500));
+            api.AddBalls(3);
+            Assert.IsTrue(api.GetBallsCount() == 3);
+            api.RemoveAllBalls();
+            Assert.IsTrue(api.GetBallsCount() == 0);
+        }
 
-            api.AddBalls(10);
-            
-            Vector2[] vels = new Vector2[10];
-            for(int i=0; i < 10; i++)
+        [TestMethod]
+        public void WallCollisionsTest()
+        {
+            LogicAbstractAPI api = LogicAbstractAPI.CreateAPI(500, 500, new DataAPITest(500, 500));
+            api.AddBalls(1);
+            float lastX = api.GetBallPosition(0).X;
+            api.LogicLayerEvent += (sender, args) =>
             {
-                vels[i] = api.GetBalls()[i].Velocity;
-            }
-            bool hit = false;
-            while (!hit)
-            {
-                for (int i = 0; i < api.GetBallsCount(); i++)
-                {
-                    if (api.GetBalls()[i].Velocity != vels[i]) { hit = true; break; }
+                
+                if (api.GetBallPosition(0).X < lastX)
+                {   
+                    Assert.IsTrue(api.GetBallPosition(0).X < 500);
                 }
-            }
-            Assert.IsTrue(hit);
+                else
+                {
+                    lastX = api.GetBallPosition(0).X;
+                }
 
+            };
+            api.RemoveAllBalls();
+
+        }
+
+        [TestMethod]
+        public void BallsCollisionsTest()
+        {
+            LogicAbstractAPI api = LogicAbstractAPI.CreateAPI(500, 500, new DataAPITest(500, 500));
+            api.AddBalls(2);
+            float lastX1 = api.GetBallPosition(0).X;
+            float lastX2 = api.GetBallPosition(1).X;
+            float lastDistance = Vector2.Distance(api.GetBallPosition(0), api.GetBallPosition(1));
+            api.LogicLayerEvent += (sender, args) =>
+            {
+                if (api.GetBallPosition(0).X > lastX1 && api.GetBallPosition(1).X < lastX2 
+                && lastDistance < Vector2.Distance(api.GetBallPosition(0), api.GetBallPosition(1)))
+                {
+                    Assert.IsTrue(api.GetBallPosition(0).X > api.GetBallPosition(1).X);
+                    Assert.IsTrue(lastDistance < Vector2.Distance(api.GetBallPosition(0), api.GetBallPosition(1)));
+                }
+                else
+                {
+                    lastX1 = api.GetBallPosition(0).X;
+                    lastX2 = api.GetBallPosition(1).X;
+                    lastDistance = Vector2.Distance(api.GetBallPosition(0), api.GetBallPosition(1));
+                }
+            };
+            api.RemoveAllBalls();
         }
 
         [TestMethod]
         public void ParametersTest() {
             LogicAbstractAPI api = LogicAbstractAPI.CreateAPI(500, 500, new DataAPITest(500, 500));
-
             Assert.AreEqual(api.Width, 500);
             Assert.AreEqual(api.Height, 500);
             api.Width = 600;

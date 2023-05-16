@@ -13,13 +13,11 @@ namespace Logika
         public abstract int Width { get; set; }
         public abstract int Height { get; set; }
         public abstract int GetBallDiameter(int id);
-        public abstract float GetBallX(int id);
-        public abstract float GetBallY(int id);
+        public abstract Vector2 GetBallPosition(int id);
         public abstract event EventHandler<(int Id, float X, float Y, int Diameter)>? LogicLayerEvent;
 
         public abstract void AddBalls(int count);
 
-        public abstract ObservableCollection<IBall> GetBalls();
         public abstract int GetBallsCount();
 
 
@@ -60,14 +58,10 @@ namespace Logika
 
             }
 
-            public override float GetBallX(int id)
-            {
-                return _dataAPI.GetBall(id).X;
-            }
 
-            public override float GetBallY(int id)
+            public override Vector2 GetBallPosition(int id)
             {
-                return _dataAPI.GetBall(id).Y;
+                return _dataAPI.GetBall(id).Position;
             }
 
             public override int GetBallDiameter(int id)
@@ -105,7 +99,7 @@ namespace Logika
             {
 
 
-                
+           
                     for (int i = 0; i < _dataAPI.GetBallCount(); i++)
                     {
 

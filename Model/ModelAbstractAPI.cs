@@ -47,7 +47,7 @@ namespace Model
                 _logicAPI.AddBalls(number);
                 for (int i = 0; i < number; i++)
                 {
-                    BallModel ballModel = new BallModel(_logicAPI.GetBallX(i), _logicAPI.GetBallY(i), _logicAPI.GetBallDiameter(i));
+                    BallModel ballModel = new BallModel(_logicAPI.GetBallPosition(i).X, _logicAPI.GetBallPosition(i).Y, _logicAPI.GetBallDiameter(i));
                     Balls.Add(ballModel);
                 }
             }
