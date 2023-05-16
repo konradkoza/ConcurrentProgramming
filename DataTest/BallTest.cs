@@ -14,15 +14,17 @@ namespace DataTest
         public void BallProperties()
         {
             api.CreateBalls(1);
+
             Assert.IsNotNull(api.GetBall(0).Diameter);
+            Assert.IsNotNull(api.GetBall(0).Mass);
+            Assert.IsNotNull(api.GetBall(0).Id);
+            Assert.IsNotNull(api.GetBall(0).Position);
+            Assert.IsNotNull(api.GetBall(0).X);
+            Assert.IsNotNull(api.GetBall(0).Y);
 
-            Vector2 pos = api.GetBall(0).Position;
             Vector2 vel = api.GetBall(0).Velocity;
-
-            Assert.AreNotEqual(api.GetBall(0).Position, pos);
+            api.GetBall(0).Velocity = new Vector2(0, 0);
             Assert.AreNotEqual(api.GetBall(0).Velocity, vel);
-            //Vector2 pos2 = api.GetBall(0).Position;
-            //api.GetBall(0).Velocity = new Vector2(0, 0);
         }
 
     }

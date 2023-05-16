@@ -36,7 +36,6 @@ namespace Data
             public override int Width { get; }
             public override int Height { get; }
  
-
             private readonly Random _random = new Random();
 
             public override ObservableCollection<IBall> GetBalls() => _balls;

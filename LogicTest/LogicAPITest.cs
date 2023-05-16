@@ -1,39 +1,200 @@
+using Data;
+using System.Collections.ObjectModel;
+using System.Numerics;
 using Logika;
 
 namespace LogicTest
 {
+    internal class BallTest : IBall
+    {
+        private Task task;
+
+        private bool _move = true;
+
+        private int _diameter;
+
+        public BallTest(float x, float y, int mass, Vector2 velocity, int diameter, int id)
+        {
+            Id = id;
+            _position = new Vector2(x, y);
+            _velocity = velocity;
+            _diameter = diameter;
+            Mass = mass;
+            task = Task.Run(Move);
+        }
+
+        public event EventHandler? BallChanged;
+
+        private Vector2 _position;
+
+        public Vector2 Position
+        {
+            get => _position;
+
+            private set
+            {
+                _position = value;
+            }
+        }
+
+        private Vector2 _velocity;
+
+        public Vector2 Velocity
+        {
+            get => _velocity;
+            set
+            {
+
+                _velocity = value;
+
+            }
+        }
+
+        public int Diameter
+        {
+            get => _diameter;
+        }
+
+        public float X => _position.X;
+
+        public float Y => _position.Y;
+
+        public int Mass { get; }
+
+
+        public int Id { get; }
+
+        private async void Move()
+        {
+            while (_move)
+            {
+                Position += _velocity;
+
+                BallChanged?.Invoke(this, EventArgs.Empty);
+                float delay = 20 / _velocity.Length();
+                await Task.Delay((int)delay);
+            }
+
+        }
+
+        public void Dispose()
+        {
+            _move = false;
+            task.Dispose();
+        }
+    }
+
+    internal class DataAPITest : DataAbstractAPI
+    {
+        private DataAbstractAPI api = CreateAPI(500, 500);
+
+        public DataAPITest(int width, int height)
+        {
+            Width = width;
+            Height = height;
+            _balls = new ObservableCollection<IBall>();
+        }
+        private ObservableCollection<IBall> _balls;
+        public override int Width { get; }
+        public override int Height { get; }
+
+
+        private readonly Random _random = new Random();
+
+        public override ObservableCollection<IBall> GetBalls() => _balls;
+
+        public override int GetBallCount()
+        {
+            return _balls.Count;
+        }
+
+        public override IBall GetBall(int index)
+        {
+            return _balls[index];
+        }
+
+        public override void CreateBalls(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                float velX = (float)((_random.NextDouble() - 0.5) * 8);
+                float velY = (float)((_random.NextDouble() - 0.5) * 8);
+                while (velX == 0 & velY == 0)
+                {
+                    velX = _random.Next(-2, 2);
+                    velY = _random.Next(-2, 2);
+                }
+
+                Vector2 vel = new Vector2(velX, velY);
+                int diameter = _random.Next(20, 40);
+                int ballMass = diameter * 2;
+                float ballX = (float)(_random.Next(20 + diameter, Width - diameter - 20) + _random.NextDouble());
+                float ballY = (float)(_random.Next(20 + diameter, Height - diameter - 20) + _random.NextDouble());
+
+                BallTest ball = new BallTest(ballX, ballY, ballMass, vel, diameter, i);
+                _balls.Add(ball);
+            }
+        }
+
+        public override void RemoveBalls()
+        {
+            foreach (IBall ball in _balls)
+            {
+                ball.Dispose();
+            }
+            _balls.Clear();
+        }
+
+
+
+    }
+
     [TestClass]
     public class LogicAPITest
     {
         [TestMethod]
         public void CreateAPITest()
         {
-            LogicAbstractAPI api = LogicAbstractAPI.CreateAPI(500,500);
+            LogicAbstractAPI api = LogicAbstractAPI.CreateAPI(500,500, new DataAPITest(500, 500));
             Assert.IsNotNull(api);
         }
 
         [TestMethod]
-        public void AddAndGetBallsTest()
+        public void BallsOperationTest()
         {
-            LogicAbstractAPI api = LogicAbstractAPI.CreateAPI(500, 500);
-            Assert.AreEqual(api.GetBalls().Count, 0);
+            LogicAbstractAPI api = LogicAbstractAPI.CreateAPI(500, 500, new DataAPITest(500, 500));
+
+            Assert.IsNotNull(api.GetBalls());
+            Assert.AreEqual(api.GetBallsCount(), 0);
             api.AddBalls(1);
             api.AddBalls(1);
-            Assert.AreEqual(api.GetBalls().Count, 2);
+            Assert.AreEqual(api.GetBallsCount(), 2);
+
+            /*api.RemoveAllBalls();
+            Assert.AreEqual(api.GetBallsCount(), 0);*/
         }
 
         [TestMethod]
-        public void MoveBallsTest()
+        public void ParametersTest() {
+            LogicAbstractAPI api = LogicAbstractAPI.CreateAPI(500, 500, new DataAPITest(500, 500));
+
+            Assert.AreEqual(api.Width, 500);
+            Assert.AreEqual(api.Height, 500);
+            api.Width = 600;
+            api.Height = 600;
+            Assert.AreEqual(api.Width, 600);
+            Assert.AreEqual(api.Height, 600);            
+        }
+
+        [TestMethod]
+        public void GettersTest()
         {
-            LogicAbstractAPI api = LogicAbstractAPI.CreateAPI(500, 500);
+            LogicAbstractAPI api = LogicAbstractAPI.CreateAPI(500, 500, new DataAPITest(500, 500));
+
             api.AddBalls(1);
-            Assert.AreEqual(api.GetBalls().Count, 1);
-            double[] coordinates = new double[2];
-            coordinates[0] = api.GetBalls()[0].X;
-            coordinates[1] = api.GetBalls()[0].Y;
-            //api.MoveBalls();
-            //Assert.AreNotEqual(coordinates[0], api.GetBalls()[0].X);
-            //Assert.AreNotEqual(coordinates[0], api.GetBalls()[0].Y);
+            Assert.IsNotNull(api.GetBallDiameter(0));
+            Assert.IsNotNull(api.GetBallX(0));
+            Assert.IsNotNull(api.GetBallY(0));
         }
     }
 }

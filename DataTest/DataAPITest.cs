@@ -29,10 +29,8 @@ namespace DataTest
             Assert.IsNotNull(api.GetBall(0));
             Assert.IsNotNull(api.GetBalls());
 
-
-
-            //api.RemoveBalls();
-            //Assert.AreEqual(api.GetBallCount(), 0);
+            /*api.RemoveBalls();
+            Assert.AreEqual(api.GetBallCount(), 0);*/
         }
 
         [TestMethod]
