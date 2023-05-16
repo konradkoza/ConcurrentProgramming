@@ -26,11 +26,22 @@ namespace DataTest
             api.CreateBalls(2);
             Assert.AreEqual(api.GetBallCount(), 2);
 
-            IBall ball = api.GetBall(0);
-            Assert.IsNotNull(ball);
+            Assert.IsNotNull(api.GetBall(0));
+            Assert.IsNotNull(api.GetBalls());
+
+
 
             //api.RemoveBalls();
             //Assert.AreEqual(api.GetBallCount(), 0);
+        }
+
+        [TestMethod]
+        public void PropertiesTest()
+        {
+            DataAbstractAPI api = DataAbstractAPI.CreateAPI(500, 500);
+
+            Assert.AreEqual(api.Width, 500);
+            Assert.AreEqual(api.Height, 500);
         }
     }
 }
