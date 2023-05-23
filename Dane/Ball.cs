@@ -93,7 +93,7 @@ namespace Data
             {
                 Position += _velocity * time;              
                 BallChanged?.Invoke(this, EventArgs.Empty);
-                _dao.addToQueue((IBall)this.MemberwiseClone());
+                _dao.addToQueue((Ball)this.MemberwiseClone());
             }
 
             public void Dispose()

@@ -77,12 +77,13 @@ namespace Data
 
             public override void RemoveBalls()
             {
-                foreach(IBall ball in _balls)
+                _dao?.Dispose();
+                foreach (IBall ball in _balls)
                 {
                     ball.Dispose();
                 }
-                _balls.Clear(); 
-                _dao?.Dispose();
+                _balls.Clear();
+                
             }
 
            

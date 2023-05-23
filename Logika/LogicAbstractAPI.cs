@@ -91,7 +91,7 @@ namespace Logika
                     DetectBallCollision(ball);
                 }
                 DetectWallCollision(ball);
-                LogicLayerEvent?.Invoke(this, (ball.Id, ball.X, ball.Y, ball.Diameter));
+                LogicLayerEvent?.Invoke(this, (ball.Id, ball.Position.X, ball.Position.Y, ball.Diameter));
             }
 
 

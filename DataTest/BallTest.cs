@@ -19,8 +19,6 @@ namespace DataTest
             Assert.IsNotNull(api.GetBall(0).Mass);
             Assert.IsNotNull(api.GetBall(0).Id);
             Assert.IsNotNull(api.GetBall(0).Position);
-            Assert.IsNotNull(api.GetBall(0).X);
-            Assert.IsNotNull(api.GetBall(0).Y);
 
             Vector2 vel = api.GetBall(0).Velocity;
             api.GetBall(0).Velocity = new Vector2(0, 0);
