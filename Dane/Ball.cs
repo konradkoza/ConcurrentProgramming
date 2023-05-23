@@ -80,7 +80,7 @@ namespace Data
                 {
                     _stopwatch.Restart();
                     _stopwatch.Start();
-                    delay = (int)(5 * _velocity.Length());
+                    delay = (int)(2 / _velocity.Length());
                     Update(delay);
                                        
                     _stopwatch.Stop();
@@ -94,7 +94,7 @@ namespace Data
                 Position += _velocity * time;              
                 BallChanged?.Invoke(this, EventArgs.Empty);
                 _dao.addToQueue((IBall)this.MemberwiseClone());
-            }
+            } 
 
             public void Dispose()
             {

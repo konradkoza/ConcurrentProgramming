@@ -24,14 +24,14 @@ namespace Data
 
         internal class DataAPI : DataAbstractAPI
         {
-            private DAO? _dao;
+            private DAO _dao;
 
             public DataAPI(int width, int height)
             {
                 Width = width;
                 Height = height;
                 _balls = new List<IBall>();
-               
+
             }
             private List<IBall> _balls;
             public override int Width { get; }
@@ -77,13 +77,13 @@ namespace Data
 
             public override void RemoveBalls()
             {
-                _dao?.Dispose();
+                
                 foreach (IBall ball in _balls)
                 {
                     ball.Dispose();
                 }
                 _balls.Clear();
-                
+                _dao.stopAdding();
             }
 
            

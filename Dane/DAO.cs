@@ -11,7 +11,6 @@ namespace Data
         private StreamWriter writer;
         private BlockingCollection<string> writingQueue;
         private string filePath = "../../../../Dane/log.txt";
-        private bool finish = false;
         public DAO()
         {
             Debug.WriteLine("create dao");
@@ -22,34 +21,49 @@ namespace Data
 
         public void addToQueue(IBall ball)
         {
-            if (ball == null || writingQueue.IsAddingCompleted)
+            if (ball == null )
             {
                 return;
             }
             String ballInfo = JsonSerializer.Serialize(ball);
             String time = DateTime.Now.ToString("HH:mm:ss");
-            String log = string.Format("\n\t\"Time\": \"{0}\",\n\t\"BallInfo\": {1}\n", time, ballInfo);
-           
+            String log = "{" + string.Format("\n\t\"Time\": \"{0}\",\n\t\"BallInfo\": {1}\n", time, ballInfo) + "}";
+            if (!writingQueue.IsAddingCompleted)
+            {
+                writingQueue.Add(log);
+            }
+            
         }
 
-        private void writeToFile()
+        private async void writeToFile()
         {
             //writer.WriteLine("[");
-
-            foreach (string item in writingQueue.GetConsumingEnumerable())
+            try
             {
-                writer.WriteLine(item);
-                
+                foreach (string item in writingQueue.GetConsumingEnumerable())
+                {
+                    writer.WriteLine(item);
+                    await writer.FlushAsync();
+                }
+            } 
+            finally
+            {
+                writer.Flush();
+                this.Dispose();
             }
+            
+            
+        }
 
-
+        public void stopAdding()
+        {
+            writingQueue.CompleteAdding();
         }
 
         public void Dispose()
         {
-            writingQueue.CompleteAdding();
+            
             loggingTask.Wait();
-            writer.Flush();
             writer.Dispose();
             // string content = File.ReadAllText(filePath);
             //if (!string.IsNullOrEmpty(content))
