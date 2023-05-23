@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Data
 {
-   
+    [Serializable]
     internal class Ball : IBall
         {
             private Task task;
@@ -21,22 +16,28 @@ namespace Data
 
             private Stopwatch _stopwatch;
 
-            public Ball(float x, float y, int mass, Vector2 velocity, int diameter, int id)
+            private DAO _dao;
+
+            private int _mass;
+
+            public Ball(float x, float y, int mass, Vector2 velocity, int diameter, int id, DAO dao)
             {
                 _stopwatch = new Stopwatch();
                 Id = id;
                 _position = new Vector2(x, y);
                 _velocity = velocity;
                 _diameter = diameter;
-                Mass = mass;
+                _mass = mass;
                 task = Task.Run(Move);
+                _dao = dao;
             }
 
             public event EventHandler? BallChanged;
 
             private Vector2 _position;
 
-            public Vector2 Position
+        [JsonConverter(typeof(Vector2Converter))]
+        public Vector2 Position
             {
                 get => _position;
 
@@ -47,8 +48,8 @@ namespace Data
             }
 
             private Vector2 _velocity;
-
-            public Vector2 Velocity
+        [JsonConverter(typeof(Vector2Converter))]
+        public Vector2 Velocity
             {
                 get => _velocity;
                 set
@@ -64,11 +65,9 @@ namespace Data
                 get => _diameter;
             }
 
-            public float X => _position.X;
-
-            public float Y => _position.Y;
-
-            public int Mass { get; }
+            public int Mass { get => _mass;
+                private set { _mass = value; }
+                }
 
 
             public int Id { get; }
@@ -94,6 +93,7 @@ namespace Data
             {
                 Position += _velocity * time;              
                 BallChanged?.Invoke(this, EventArgs.Empty);
+                _dao.addToQueue((IBall)this.MemberwiseClone());
             }
 
             public void Dispose()
@@ -102,5 +102,22 @@ namespace Data
                 task.Wait();
                 task.Dispose();     
             }
+
+       
+    }
+    internal class Vector2Converter : JsonConverter<Vector2>
+    {
+        public override Vector2 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            throw new NotImplementedException();
         }
+
+        public override void Write(Utf8JsonWriter writer, Vector2 value, JsonSerializerOptions options)
+        {
+            writer.WriteStartObject();
+            writer.WriteNumber("X", value.X);
+            writer.WriteNumber("Y", value.Y);
+            writer.WriteEndObject();
+        }
+    }
 }

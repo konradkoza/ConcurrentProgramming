@@ -20,9 +20,6 @@ namespace Data
 
         event EventHandler? BallChanged;
 
-        float X { get; }
-        float Y { get; }
-
     
     }
 }

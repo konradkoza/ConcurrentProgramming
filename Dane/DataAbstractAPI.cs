@@ -24,17 +24,22 @@ namespace Data
 
         internal class DataAPI : DataAbstractAPI
         {
+            private DAO? _dao;
+
             public DataAPI(int width, int height)
             {
                 Width = width;
                 Height = height;
                 _balls = new List<IBall>();
+               
             }
             private List<IBall> _balls;
             public override int Width { get; }
             public override int Height { get; }
  
             private readonly Random _random = new Random();
+
+            
 
             public override int GetBallCount() 
             { 
@@ -48,7 +53,8 @@ namespace Data
 
             public override void CreateBalls(int count)
             {
-                for(int i  = 0; i < count; i++)
+                _dao = new DAO();
+                for (int i  = 0; i < count; i++)
                 {
                     float velX = (float)((_random.NextDouble() - 0.5) * 2);
                     float velY = (float)((_random.NextDouble() - 0.5) * 2);
@@ -64,7 +70,7 @@ namespace Data
                     float ballX = (float)(_random.Next(20 + diameter, Width - diameter - 20) + _random.NextDouble());
                     float ballY = (float)(_random.Next(20 + diameter, Height - diameter - 20) + _random.NextDouble());
                     
-                    Ball ball = new Ball(ballX, ballY, ballMass, vel, diameter, i);
+                    Ball ball = new Ball(ballX, ballY, ballMass, vel, diameter, i, _dao);
                     _balls.Add(ball);
                 }
             }
@@ -76,6 +82,7 @@ namespace Data
                     ball.Dispose();
                 }
                 _balls.Clear(); 
+                _dao?.Dispose();
             }
 
            
