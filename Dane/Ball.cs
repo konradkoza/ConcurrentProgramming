@@ -36,7 +36,7 @@ namespace Data
 
             private Vector2 _position;
 
-        [JsonConverter(typeof(Vector2Converter))]
+        
         public Vector2 Position
             {
                 get => _position;
@@ -48,7 +48,7 @@ namespace Data
             }
 
             private Vector2 _velocity;
-        [JsonConverter(typeof(Vector2Converter))]
+
         public Vector2 Velocity
             {
                 get => _velocity;
@@ -93,7 +93,7 @@ namespace Data
             {
                 Position += _velocity * time;              
                 BallChanged?.Invoke(this, EventArgs.Empty);
-                _dao.addToQueue((Ball)this.MemberwiseClone());
+                _dao.addToQueue((IBall)this.MemberwiseClone());
             }
 
             public void Dispose()
@@ -105,19 +105,5 @@ namespace Data
 
        
     }
-    internal class Vector2Converter : JsonConverter<Vector2>
-    {
-        public override Vector2 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Write(Utf8JsonWriter writer, Vector2 value, JsonSerializerOptions options)
-        {
-            writer.WriteStartObject();
-            writer.WriteNumber("X", value.X);
-            writer.WriteNumber("Y", value.Y);
-            writer.WriteEndObject();
-        }
-    }
+   
 }

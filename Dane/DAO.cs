@@ -20,47 +20,42 @@ namespace Data
             loggingTask = Task.Run(writeToFile);
         }
 
-        public void addToQueue(Ball ball)
+        public void addToQueue(IBall ball)
         {
-            if (ball == null)
+            if (ball == null || writingQueue.IsAddingCompleted)
             {
                 return;
             }
             String ballInfo = JsonSerializer.Serialize(ball);
             String time = DateTime.Now.ToString("HH:mm:ss");
             String log = string.Format("\n\t\"Time\": \"{0}\",\n\t\"BallInfo\": {1}\n", time, ballInfo);
-            writingQueue.Add(log);
+           
         }
 
         private void writeToFile()
         {
             //writer.WriteLine("[");
-         
-                foreach (string item in writingQueue.GetConsumingEnumerable())
-                {
-                    writer.WriteLine(item);
-                    
-                    if (finish && writingQueue.Count == 0) 
-                {
-                    writer.Flush();
-                    break; 
-                }
-                }
-            
+
+            foreach (string item in writingQueue.GetConsumingEnumerable())
+            {
+                writer.WriteLine(item);
+                
+            }
+
 
         }
 
         public void Dispose()
         {
-            finish = true;
+            writingQueue.CompleteAdding();
             loggingTask.Wait();
+            writer.Flush();
             writer.Dispose();
-           // string content = File.ReadAllText(filePath);
+            // string content = File.ReadAllText(filePath);
             //if (!string.IsNullOrEmpty(content))
             //{
-              //  content = content.Remove(content.Length - 3);
-                //File.WriteAllText(filePath, content + "\n]");
-
+            //  content = content.Remove(content.Length - 3);
+            //File.WriteAllText(filePath, content + "\n]");
             //}
             loggingTask.Dispose();
         }
