@@ -81,7 +81,7 @@ namespace Data
                 {
                     _stopwatch.Restart();
                     _stopwatch.Start();
-
+                    delay = (int)(5 * _velocity.Length());
                     Update(delay);
                                        
                     _stopwatch.Stop();
@@ -99,6 +99,7 @@ namespace Data
             public void Dispose()
             {
                 _move = false;
+                task.Wait();
                 task.Dispose();     
             }
         }

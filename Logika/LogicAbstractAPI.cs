@@ -186,7 +186,7 @@ namespace Logika
             private void DetectWallCollision(IBall ball)
             {
 
-                Vector2 newVel = new Vector2(ball.Velocity.X, ball.Velocity.Y);
+                Vector2 newVel = ball.Velocity;
                 int Radius = ball.Diameter / 2;
                 if (ball.Position.X - Radius <= 0)
                 {
