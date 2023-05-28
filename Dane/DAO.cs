@@ -11,6 +11,7 @@ namespace Data
         private StreamWriter writer;
         private BlockingCollection<string> writingQueue;
         private string filePath = "../../../../Dane/log.txt";
+        private object locker = new object();   
         public DAO()
         {
             Debug.WriteLine("create dao");
@@ -25,9 +26,9 @@ namespace Data
             {
                 return;
             }
+            String time = DateTime.Now.ToString("HH:mm:ss.ff");
             String ballInfo = JsonSerializer.Serialize(ball);
-            String time = DateTime.Now.ToString("HH:mm:ss");
-            String log = "{" + string.Format("\n\t\"Time\": \"{0}\",\n\t\"BallInfo\": {1}\n", time, ballInfo) + "}";
+            String log = "{" + string.Format("\n\t\"Time\": \"{0}\",\n\t\"BallInfo\": {1}\n", time, ballInfo) + "},";
             if (!writingQueue.IsAddingCompleted)
             {
                 writingQueue.Add(log);
@@ -37,7 +38,7 @@ namespace Data
 
         private async void writeToFile()
         {
-            //writer.WriteLine("[");
+            writer.WriteLine("[");
             try
             {
                 foreach (string item in writingQueue.GetConsumingEnumerable())
@@ -48,7 +49,7 @@ namespace Data
             } 
             finally
             {
-                writer.Flush();
+                
                 this.Dispose();
             }
             
@@ -62,15 +63,15 @@ namespace Data
 
         public void Dispose()
         {
-            
-            loggingTask.Wait();
+            writer.Flush();
             writer.Dispose();
-            // string content = File.ReadAllText(filePath);
-            //if (!string.IsNullOrEmpty(content))
-            //{
-            //  content = content.Remove(content.Length - 3);
-            //File.WriteAllText(filePath, content + "\n]");
-            //}
+            string content = File.ReadAllText(filePath);
+            if (!string.IsNullOrEmpty(content))
+            {
+                content = content.Remove(content.Length - 3);
+                File.WriteAllText(filePath, content + "\n]");
+            }
+            loggingTask.Wait();
             loggingTask.Dispose();
         }
     }

@@ -99,12 +99,12 @@ namespace Logika
             {
 
 
-           
-                    for (int i = 0; i < _dataAPI.GetBallCount(); i++)
-                    {
 
-                        IBall secondBall = _dataAPI.GetBall(i);
-                        if (firstBall == secondBall)
+                for (int i = 0; i < _dataAPI.GetBallCount(); i++)
+                {
+
+                    IBall secondBall = _dataAPI.GetBall(i);
+                    if (firstBall == secondBall || secondBall == null)
                         {
                             continue;
                         }
@@ -207,7 +207,6 @@ namespace Logika
                     newVel.Y = -Math.Abs(ball.Velocity.Y);
 
                 }
-
                 ball.Velocity = newVel;
             }
 

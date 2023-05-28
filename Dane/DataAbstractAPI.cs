@@ -48,7 +48,13 @@ namespace Data
 
             public override IBall GetBall(int index)
             {
-                return _balls[index];
+                if (_balls.Count > 0)
+                {
+                    return _balls[index];
+                } else 
+                {
+                    return null;
+                }
             }
 
             public override void CreateBalls(int count)
@@ -70,7 +76,8 @@ namespace Data
                     float ballX = (float)(_random.Next(20 + diameter, Width - diameter - 20) + _random.NextDouble());
                     float ballY = (float)(_random.Next(20 + diameter, Height - diameter - 20) + _random.NextDouble());
                     
-                    Ball ball = new Ball(ballX, ballY, ballMass, vel, diameter, i, _dao);
+                    Ball ball = new Ball(ballX, ballY, ballMass, vel, diameter, i);
+                    ball.BallChanged += (object? sender, EventArgs args) =>_dao.addToQueue((IBall)sender);
                     _balls.Add(ball);
                 }
             }

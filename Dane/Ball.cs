@@ -16,11 +16,9 @@ namespace Data
 
             private Stopwatch _stopwatch;
 
-            private DAO _dao;
-
             private int _mass;
 
-            public Ball(float x, float y, int mass, Vector2 velocity, int diameter, int id, DAO dao)
+            public Ball(float x, float y, int mass, Vector2 velocity, int diameter, int id)
             {
                 _stopwatch = new Stopwatch();
                 Id = id;
@@ -29,10 +27,20 @@ namespace Data
                 _diameter = diameter;
                 _mass = mass;
                 task = Task.Run(Move);
-                _dao = dao;
             }
 
-            public event EventHandler? BallChanged;
+            public Ball(Ball other)
+            {
+                _stopwatch = new Stopwatch();
+                Id = other.Id;
+                _position = new Vector2(other.Position.X, other.Position.Y);
+                _velocity = other.Velocity;
+                _diameter = other.Diameter;
+                _mass = other.Mass;
+                task = Task.Run(Move);
+            }
+
+        public event EventHandler? BallChanged;
 
             private Vector2 _position;
 
@@ -93,7 +101,7 @@ namespace Data
             {
                 Position += _velocity * time;              
                 BallChanged?.Invoke(this, EventArgs.Empty);
-                _dao.addToQueue((IBall)this.MemberwiseClone());
+                //_dao.addToQueue((IBall)this.MemberwiseClone());
             } 
 
             public void Dispose()
