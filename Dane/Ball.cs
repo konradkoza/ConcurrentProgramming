@@ -82,27 +82,26 @@ namespace Data
 
             private async void Move()
             {
-                int delay = 15;
+                float time;
 
                 while (_move)
                 {
                     _stopwatch.Restart();
                     _stopwatch.Start();
-                    delay = (int)(2 / _velocity.Length());
-                    Update(delay);
+                    time = (2 / _velocity.Length());
+                    Update(time);
                                        
                     _stopwatch.Stop();
-                    await Task.Delay(delay - (int)_stopwatch.ElapsedMilliseconds < 0 ? 0 : delay - (int)_stopwatch.ElapsedMilliseconds);
+                    await Task.Delay(time - _stopwatch.ElapsedMilliseconds < 0 ? 0 : (int)(time - _stopwatch.ElapsedMilliseconds));
                 }
 
             }
 
-            private void Update(long time)
+            private void Update(float time)
             {
                 Position += _velocity * time;              
                 BallChanged?.Invoke(this, EventArgs.Empty);
-                //_dao.addToQueue((IBall)this.MemberwiseClone());
-            } 
+            }
 
             public void Dispose()
             {

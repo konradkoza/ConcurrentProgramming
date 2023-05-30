@@ -48,26 +48,22 @@ namespace Data
 
             public override IBall GetBall(int index)
             {
-                if (_balls.Count > 0)
-                {
-                    return _balls[index];
-                } else 
-                {
-                    return null;
-                }
+                return _balls[index];
+                
             }
 
             public override void CreateBalls(int count)
             {
-                _dao = new DAO();
+                _dao = new DAO(Width, Height);
                 for (int i  = 0; i < count; i++)
                 {
-                    float velX = (float)((_random.NextDouble() - 0.5) * 2);
-                    float velY = (float)((_random.NextDouble() - 0.5) * 2);
+                    int scale = 1;
+                    float velX = (float)((_random.NextDouble() - 0.5) * scale);
+                    float velY = (float)((_random.NextDouble() - 0.5) * scale);
                     while (velX == 0 & velY == 0)
                     {
-                        velX = _random.Next(-2, 2);
-                        velY = _random.Next(-2, 2);
+                        velX = (float)((_random.NextDouble() - 0.5) * scale);
+                        velY = (float)((_random.NextDouble() - 0.5) * scale);
                     }
 
                     Vector2 vel = new Vector2(velX, velY);

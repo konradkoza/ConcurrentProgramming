@@ -25,6 +25,7 @@ namespace Data
 
         event EventHandler? BallChanged;
 
+        
     
     }
     internal class Vector2Converter : JsonConverter<Vector2>

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
+using System.Dynamic;
 using System.Text.Json;
 
 namespace Data
@@ -11,10 +11,13 @@ namespace Data
         private StreamWriter writer;
         private BlockingCollection<string> writingQueue;
         private string filePath = "../../../../Dane/log.txt";
-        private object locker = new object();   
-        public DAO()
+        private object locker = new object();
+        private int Width;
+        private int Height;
+        public DAO(int width, int height)
         {
-            Debug.WriteLine("create dao");
+            this.Width = width;
+            this.Height = height;
             writingQueue = new BlockingCollection<String>();
             writer = new StreamWriter(filePath, append: false);
             loggingTask = Task.Run(writeToFile);
@@ -22,29 +25,36 @@ namespace Data
 
         public void addToQueue(IBall ball)
         {
-            if (ball == null )
+            if (ball == null)
             {
                 return;
             }
-            String time = DateTime.Now.ToString("HH:mm:ss.ff");
-            String ballInfo = JsonSerializer.Serialize(ball);
-            String log = "{" + string.Format("\n\t\"Time\": \"{0}\",\n\t\"BallInfo\": {1}\n", time, ballInfo) + "},";
+            String time;
+            String ballInfo;
+            String log;
+            lock (locker)
+            {
+                time = DateTime.Now.ToString("HH:mm:ss.ff");
+                ballInfo = JsonSerializer.Serialize(ball);
+                log = "{" + string.Format("\n\t\"Time\": \"{0}\",\n\t\"BallInfo\": {1}\n", time, ballInfo) + "},";
+                
+            }
             if (!writingQueue.IsAddingCompleted)
             {
                 writingQueue.Add(log);
             }
-            
+
         }
 
-        private async void writeToFile()
+        private void writeToFile()
         {
             writer.WriteLine("[");
+            writer.WriteLine("{" + string.Format("\n\t\"Width\": {0},\n\t\"Height\": {1}\n", Width, Height) + "},");
             try
             {
                 foreach (string item in writingQueue.GetConsumingEnumerable())
                 {
                     writer.WriteLine(item);
-                    await writer.FlushAsync();
                 }
             } 
             finally
