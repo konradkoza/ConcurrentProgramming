@@ -104,7 +104,7 @@ namespace Logika
                 {
 
                     IBall secondBall = _dataAPI.GetBall(i);
-                    if (firstBall == secondBall || secondBall == null)
+                    if (firstBall == secondBall)
                         {
                             continue;
                         }
