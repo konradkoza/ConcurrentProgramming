@@ -1,6 +1,4 @@
-﻿
-using System.Collections.ObjectModel;
-using System.Numerics;
+﻿using System.Numerics;
 
 
 namespace Data
@@ -86,7 +84,8 @@ namespace Data
                     ball.Dispose();
                 }
                 _balls.Clear();
-                _dao.stopAdding();
+
+                _dao.Dispose();
             }
 
            

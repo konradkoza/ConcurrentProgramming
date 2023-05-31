@@ -1,11 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Numerics;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Data
 {
-    [Serializable]
+
     internal class Ball : IBall
         {
             private Task task;

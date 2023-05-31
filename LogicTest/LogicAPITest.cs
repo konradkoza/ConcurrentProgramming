@@ -1,11 +1,11 @@
 using Data;
-using System.Numerics;
 using Logika;
+using System.Numerics;
 
 
 namespace LogicTest
 {
-        [TestClass]
+    [TestClass]
         public class LogicAPITest
         {
 

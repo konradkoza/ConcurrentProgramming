@@ -1,7 +1,6 @@
 ﻿using System.Collections.Concurrent;
-using System.Diagnostics;
-using System.Dynamic;
 using System.Text.Json;
+
 
 namespace Data
 {
@@ -9,19 +8,19 @@ namespace Data
     {
         private Task loggingTask;
         private StreamWriter writer;
-        private BlockingCollection<string> writingQueue;
+        private BlockingCollection<BallData> writingQueue;
         private string filePath = "../../../../Dane/log.txt";
-        private object locker = new object();
         private int Width;
         private int Height;
         public DAO(int width, int height)
         {
             this.Width = width;
             this.Height = height;
-            writingQueue = new BlockingCollection<String>();
+            writingQueue = new BlockingCollection<BallData>();
             writer = new StreamWriter(filePath, append: false);
             loggingTask = Task.Run(writeToFile);
         }
+
 
         public void addToQueue(IBall ball)
         {
@@ -29,50 +28,45 @@ namespace Data
             {
                 return;
             }
-            String time;
-            String ballInfo;
-            String log;
-            lock (locker)
-            {
-                time = DateTime.Now.ToString("HH:mm:ss.ff");
-                ballInfo = JsonSerializer.Serialize(ball);
-                log = "{" + string.Format("\n\t\"Time\": \"{0}\",\n\t\"BallInfo\": {1}\n", time, ballInfo) + "},";
-                
-            }
+
+            BallData ballToSave = new BallData(
+                                                ball.Position.X,
+                                                ball.Position.Y,
+                                                ball.Diameter,
+                                                ball.Mass,
+                                                ball.Velocity.X,
+                                                ball.Velocity.Y,
+                                                ball.Id);
+
             if (!writingQueue.IsAddingCompleted)
             {
-                writingQueue.Add(log);
+                writingQueue.Add(ballToSave);
             }
 
         }
 
         private void writeToFile()
         {
+            JsonSerializerOptions options = new JsonSerializerOptions();
+            options.WriteIndented = true;
             writer.WriteLine("[");
             writer.WriteLine("{" + string.Format("\n\t\"Width\": {0},\n\t\"Height\": {1}\n", Width, Height) + "},");
-            try
+            foreach (BallData ball in writingQueue.GetConsumingEnumerable())
             {
-                foreach (string item in writingQueue.GetConsumingEnumerable())
-                {
-                    writer.WriteLine(item);
-                }
-            } 
-            finally
-            {
-                
-                this.Dispose();
-            }
-            
-            
-        }
+                string log = JsonSerializer.Serialize(ball, options);
 
-        public void stopAdding()
-        {
-            writingQueue.CompleteAdding();
+                writer.WriteLine(log + ",");
+
+            }
+
+
+
+
         }
 
         public void Dispose()
         {
+            writingQueue.CompleteAdding();
             writer.Flush();
             writer.Dispose();
             string content = File.ReadAllText(filePath);
@@ -83,6 +77,32 @@ namespace Data
             }
             loggingTask.Wait();
             loggingTask.Dispose();
+        }
+
+        internal class BallData
+        {
+            public float X { get; set; }
+            public float Y { get; set; }
+            public int Diameter { get; set; }
+            public int Mass { get; set; }
+            public string Time { get; set; }
+            public float VelocityX { get; set; }
+            public float VelocityY { get; set; }
+            public int Id { get; set; }
+
+
+            public BallData(float x, float y, int diameter, int mass, float velX, float velY, int id)
+            {
+                X = x;
+                Y = y;
+                Diameter = diameter;
+                Mass = mass;
+                Time = DateTime.UtcNow.ToString("G");
+                VelocityX = velX;
+                VelocityY = velY;
+                Id = id;
+
+            }
         }
     }
 }
