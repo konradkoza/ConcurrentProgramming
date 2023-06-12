@@ -49,16 +49,16 @@ namespace Data
         {
             JsonSerializerOptions options = new JsonSerializerOptions();
             options.WriteIndented = true;
-            writer.WriteLine("[");
-            writer.WriteLine("{" + string.Format("\n\t\"Width\": {0},\n\t\"Height\": {1}\n", Width, Height) + "},");
+            writer.Write("[\n");
+            writer.Write("{" + string.Format("\n\t\"Width\": {0},\n\t\"Height\": {1}\n", Width, Height) + "}");
             foreach (BallData ball in writingQueue.GetConsumingEnumerable())
             {
                 string log = JsonSerializer.Serialize(ball, options);
 
-                writer.WriteLine(log + ",");
+                writer.Write("," + "\n"  + log);
 
             }
-
+            
 
 
 
@@ -67,14 +67,9 @@ namespace Data
         public void Dispose()
         {
             writingQueue.CompleteAdding();
+            writer.Write("\n]");
             writer.Flush();
             writer.Dispose();
-            string content = File.ReadAllText(filePath);
-            if (!string.IsNullOrEmpty(content))
-            {
-                content = content.Remove(content.Length - 3);
-                File.WriteAllText(filePath, content + "\n]");
-            }
             loggingTask.Wait();
             loggingTask.Dispose();
         }
