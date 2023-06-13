@@ -17,7 +17,6 @@ namespace Data
             this.Width = width;
             this.Height = height;
             writingQueue = new BlockingCollection<BallData>();
-            writer = new StreamWriter(filePath, append: false);
             loggingTask = Task.Run(writeToFile);
         }
 
@@ -47,16 +46,21 @@ namespace Data
 
         private void writeToFile()
         {
-            JsonSerializerOptions options = new JsonSerializerOptions();
-            options.WriteIndented = true;
-            writer.Write("[\n");
-            writer.Write("{" + string.Format("\n\t\"Width\": {0},\n\t\"Height\": {1}\n", Width, Height) + "}");
-            foreach (BallData ball in writingQueue.GetConsumingEnumerable())
+            using (writer = new StreamWriter(filePath, append: false))
             {
-                string log = JsonSerializer.Serialize(ball, options);
+                JsonSerializerOptions options = new JsonSerializerOptions();
+                options.WriteIndented = true;
+                writer.Write("[\n");
+                writer.Write("{" + string.Format("\n\t\"Width\": {0},\n\t\"Height\": {1}\n", Width, Height) + "}");
+                foreach (BallData ball in writingQueue.GetConsumingEnumerable())
+                {
+                    string log = JsonSerializer.Serialize(ball, options);
 
-                writer.Write("," + "\n"  + log);
+                    writer.Write("," + "\n"  + log);
 
+                }
+                writer.Write("\n]");
+                writer.Flush();
             }
             
 
@@ -66,10 +70,7 @@ namespace Data
 
         public void Dispose()
         {
-            writingQueue.CompleteAdding();
-            writer.Write("\n]");
-            writer.Flush();
-            writer.Dispose();
+            writingQueue.CompleteAdding();      
             loggingTask.Wait();
             loggingTask.Dispose();
         }
